@@ -1,5 +1,6 @@
 const fs = require("fs");
 const path = require("path");
+const crypto = require("crypto");
 const { execFileSync } = require("child_process");
 
 const root = path.resolve(__dirname, "..");
@@ -7,9 +8,12 @@ const dist = path.join(root, "dist");
 const releaseRoot = path.join(dist, "release");
 const oldoodle = path.join(releaseRoot, "Oldoodle");
 const extensionDir = path.join(oldoodle, "Oldoodle_Extension");
+const torrentDir = path.join(oldoodle, "Oldoodle_Torrent");
 const readmeDir = path.join(oldoodle, "Oldoodle_ReadMe");
 const appGuideDir = path.join(readmeDir, "Oldoodle_App_Guide");
 const zipPath = path.join(dist, "Oldoodle_Release.zip");
+const torrentPath = path.join(torrentDir, "Oldoodle_Torrent.torrent");
+const pieceLength = 256 * 1024;
 
 function rm(target) {
   fs.rmSync(target, { recursive: true, force: true });
@@ -24,9 +28,93 @@ function write(file, content) {
   fs.writeFileSync(file, content.trimStart(), "utf8");
 }
 
+function bencode(value) {
+  if (Buffer.isBuffer(value)) return Buffer.concat([Buffer.from(`${value.length}:`), value]);
+  if (typeof value === "string") return Buffer.from(`${Buffer.byteLength(value)}:${value}`);
+  if (typeof value === "number") return Buffer.from(`i${Math.trunc(value)}e`);
+  if (Array.isArray(value)) return Buffer.concat([Buffer.from("l"), ...value.map(bencode), Buffer.from("e")]);
+  return Buffer.concat([
+    Buffer.from("d"),
+    ...Object.keys(value).sort().flatMap((key) => [bencode(key), bencode(value[key])]),
+    Buffer.from("e")
+  ]);
+}
+
+function listTorrentFiles(baseDir) {
+  const files = [];
+
+  function walk(current) {
+    for (const entry of fs.readdirSync(current, { withFileTypes: true })) {
+      const full = path.join(current, entry.name);
+      const relative = path.relative(baseDir, full);
+      if (relative === "Oldoodle_Torrent" || relative.startsWith(`Oldoodle_Torrent${path.sep}`)) continue;
+      if (entry.isDirectory()) {
+        walk(full);
+      } else {
+        files.push(full);
+      }
+    }
+  }
+
+  walk(baseDir);
+  return files.sort();
+}
+
+function buildPieces(files) {
+  const pieces = [];
+  let pending = Buffer.alloc(0);
+
+  for (const file of files) {
+    let data = fs.readFileSync(file);
+    while (data.length) {
+      const remaining = pieceLength - pending.length;
+      pending = Buffer.concat([pending, data.subarray(0, remaining)]);
+      data = data.subarray(remaining);
+
+      if (pending.length === pieceLength) {
+        pieces.push(crypto.createHash("sha1").update(pending).digest());
+        pending = Buffer.alloc(0);
+      }
+    }
+  }
+
+  if (pending.length) pieces.push(crypto.createHash("sha1").update(pending).digest());
+  return Buffer.concat(pieces);
+}
+
+function writeTorrent(baseDir) {
+  const files = listTorrentFiles(baseDir);
+  const torrent = {
+    "announce": "udp://tracker.opentrackr.org:1337/announce",
+    "announce-list": [
+      ["udp://tracker.opentrackr.org:1337/announce"],
+      ["udp://open.stealth.si:80/announce"],
+      ["udp://tracker.torrent.eu.org:451/announce"]
+    ],
+    "comment": "Oldoodle XP release torrent. Generated locally; share the release folder contents alongside this torrent for hotspot-friendly transfers.",
+    "created by": "Oldoodle release builder",
+    "creation date": Math.floor(Date.now() / 1000),
+    "url-list": [
+      "https://github.com/Aki2457/oldoogle-xp-search/releases/download/v1.0.1/Oldoodle_Release.zip"
+    ],
+    "info": {
+      "name": "Oldoodle",
+      "piece length": pieceLength,
+      "pieces": buildPieces(files),
+      "files": files.map((file) => ({
+        "length": fs.statSync(file).size,
+        "path": path.relative(baseDir, file).split(path.sep)
+      }))
+    }
+  };
+
+  fs.writeFileSync(torrentPath, bencode(torrent));
+}
+
 rm(releaseRoot);
 rm(zipPath);
 fs.mkdirSync(extensionDir, { recursive: true });
+fs.mkdirSync(torrentDir, { recursive: true });
 fs.mkdirSync(appGuideDir, { recursive: true });
 
 copy(path.join(dist, "Oldoogle-Chromium-XP.exe"), path.join(oldoodle, "Oldoodle_Chromium.exe"));
@@ -44,6 +132,19 @@ This folder contains the browser extension builds.
 Live search widgets use the local Oldoogle server at \`http://localhost:3000\`. Start the app server before expecting Apify-backed searches to work from an extension page.
 
 If Chrome blocks local CRX installs, use Developer Mode and load \`extensions/chromium\` unpacked from the source repo.
+`);
+
+write(path.join(torrentDir, "Oldoodle_Torrent.md"), `
+# Oldoodle Torrent
+
+\`Oldoodle_Torrent.torrent\` is included for hotspot-friendly sharing.
+
+Important notes:
+
+- The torrent describes the Oldoodle release payload files and intentionally excludes the \`Oldoodle_Torrent/\` folder itself. A torrent cannot reliably include itself because changing the torrent changes the payload hash.
+- For easiest sharing, keep the extracted \`Oldoodle/\` folder intact and seed it from a BitTorrent client.
+- The torrent includes public UDP trackers and a GitHub release web seed for \`Oldoodle_Release.zip\`.
+- If you only need a direct download, use the GitHub release zip instead.
 `);
 
 write(path.join(readmeDir, "Oldoodle_Github_Details.md"), `
@@ -152,6 +253,8 @@ write(path.join(appGuideDir, "Oldoodle_Extension_Update_Guide.md"), `
 npm run package:extensions
 \`\`\`
 `);
+
+writeTorrent(oldoodle);
 
 execFileSync("powershell", [
   "-NoProfile",
