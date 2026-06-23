@@ -1,0 +1,22 @@
+{
+  "bin": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "build:exe": "pkg . --targets node18-win-x64 --output dist/Oldoogle-XP.exe",
+    "package:extensions": "powershell -ExecutionPolicy Bypass -File scripts/package-extensions.ps1",
+    "download:chromium": "node scripts/download-chromium.js"
+  },
+  "pkg": {
+    "assets": [
+      "public/**/*"
+    ]
+  },
+  "dependencies": {
+    "dotenv": "^16.4.7",
+    "express": "^4.21.2"
+  },
+  "devDependencies": {
+    "@puppeteer/browsers": "^2.10.13",
+    "pkg": "^5.8.1"
+  }
+}
