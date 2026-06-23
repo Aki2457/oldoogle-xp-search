@@ -224,9 +224,59 @@ body {
   min-height: calc(100vh - 179px);
   padding: clamp(34px, 8vh, 76px) 24px 34px;
   background: linear-gradient(#fff 0%, #fff 78%, #fafafa 100%);
+  overflow: hidden;
+}
+
+.doodle-stage {
+  position: absolute;
+  top: 10px;
+  left: 18px;
+  right: 18px;
+  min-height: 28px;
+  pointer-events: none;
+}
+
+.doodle-badge {
+  display: inline-flex;
+  align-items: center;
+  height: 22px;
+  padding: 0 8px;
+  border: 1px solid #b5b5a2;
+  background: #fffbe6;
+  color: #5b4a00;
+  font: 700 11px "Courier New", monospace;
+  box-shadow: 1px 1px 0 #d7d1ae;
+}
+
+.doodle-controls {
+  position: absolute;
+  right: 0;
+  top: 0;
+  display: flex;
+  gap: 4px;
+  pointer-events: auto;
+}
+
+.doodle-controls button {
+  height: 22px;
+  border: 1px solid #b5b5a2;
+  border-right-color: #777;
+  border-bottom-color: #777;
+  background: #e9e5d0;
+  color: #333;
+  font-size: 11px;
+  padding: 0 7px;
+}
+
+.doodle-controls button:hover,
+.doodle-controls button.is-active {
+  background: #316ac5;
+  color: #fff;
 }
 
 .logo {
+  position: relative;
+  z-index: 1;
   margin: 0 auto 20px;
   text-align: center;
   font-family: Georgia, "Times New Roman", serif;
@@ -235,6 +285,90 @@ body {
   letter-spacing: 0;
   line-height: .95;
   text-shadow: .018em .018em 0 rgba(0, 0, 0, .08);
+}
+
+body[data-doodle="april-fools"] .logo {
+  transform: rotate(-1deg);
+}
+
+body[data-doodle="april-fools"] .logo span:nth-child(3) {
+  display: inline-block;
+  transform: translateY(-9px) rotate(9deg);
+}
+
+body[data-doodle="april-fools"] .logo::before {
+  content: "beta? probably";
+  position: absolute;
+  left: 50%;
+  top: -16px;
+  transform: translateX(-50%) rotate(3deg);
+  padding: 2px 7px;
+  border: 1px dashed #a24a00;
+  background: #fff2b8;
+  color: #934400;
+  font: 700 12px "Comic Sans MS", "Trebuchet MS", cursive;
+}
+
+body[data-doodle="april-fools"] .page {
+  background:
+    repeating-linear-gradient(135deg, rgba(255, 237, 143, .28) 0 10px, transparent 10px 20px),
+    linear-gradient(#fff 0%, #fff 78%, #fafafa 100%);
+}
+
+body[data-doodle="april-fools"] .search-box input {
+  transform: skewX(-1deg);
+}
+
+body[data-doodle="birthday"] .logo::after {
+  content: "";
+  position: absolute;
+  left: calc(50% - 98px);
+  top: -24px;
+  width: 20px;
+  height: 22px;
+  border: 1px solid #8f6b00;
+  background: linear-gradient(#ffdf5d, #f5a623);
+  box-shadow: 54px 10px 0 #4aa3ff, 108px -2px 0 #e94b35, 164px 9px 0 #39a852;
+}
+
+body[data-doodle="birthday"] .page {
+  background:
+    radial-gradient(circle at 18% 28%, rgba(255, 208, 70, .18) 0 18px, transparent 19px),
+    radial-gradient(circle at 80% 20%, rgba(64, 144, 255, .16) 0 16px, transparent 17px),
+    radial-gradient(circle at 72% 62%, rgba(236, 76, 61, .13) 0 20px, transparent 21px),
+    linear-gradient(#fff 0%, #fff 78%, #fafafa 100%);
+}
+
+body[data-doodle="birthday"] .doodle-badge {
+  background: #fff0bd;
+}
+
+body[data-doodle="winter"] .logo {
+  text-shadow: .018em .018em 0 rgba(0, 0, 0, .08), 0 0 8px rgba(112, 169, 255, .35);
+}
+
+body[data-doodle="winter"] .logo::before {
+  content: "";
+  position: absolute;
+  left: calc(50% - 170px);
+  right: calc(50% - 170px);
+  top: -6px;
+  height: 8px;
+  background: repeating-linear-gradient(90deg, #e9f5ff 0 18px, #cbe5ff 18px 28px);
+  border: 1px solid #a6c8eb;
+}
+
+body[data-doodle="winter"] .page {
+  background:
+    radial-gradient(circle at 12% 22%, rgba(164, 210, 255, .5) 0 2px, transparent 3px),
+    radial-gradient(circle at 72% 18%, rgba(164, 210, 255, .45) 0 2px, transparent 3px),
+    radial-gradient(circle at 84% 66%, rgba(164, 210, 255, .4) 0 2px, transparent 3px),
+    linear-gradient(#fff 0%, #f7fbff 78%, #eef7ff 100%);
+}
+
+body[data-doodle="winter"] .doodle-badge {
+  background: #eaf6ff;
+  color: #24517c;
 }
 
 .logo span:nth-child(1),

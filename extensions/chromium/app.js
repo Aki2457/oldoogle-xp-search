@@ -15,6 +15,8 @@ const petBond = document.querySelector("#petBond");
 const browserStatusText = document.querySelector("#browserStatusText");
 const startButton = document.querySelector("#startButton");
 const startMenu = document.querySelector("#startMenu");
+const doodleBadge = document.querySelector("#doodleBadge");
+const doodleButtons = document.querySelectorAll("[data-doodle]");
 
 let activeEvents;
 let petTimer;
@@ -24,6 +26,7 @@ if (localStorage.getItem("oldooleActualPetApplied") !== "true") {
 }
 let petEnabled = localStorage.getItem("oldoolePetEnabled") !== "false";
 let petState = loadPetState();
+let currentDoodle = localStorage.getItem("oldoogleDoodle") || autoDoodle();
 const apiBase = ["chrome-extension:", "moz-extension:", "file:"].includes(location.protocol)
   ? "http://localhost:3000"
   : "";
@@ -121,6 +124,42 @@ function setPet(mood, face, message, hold = 2400) {
 function setStatus(message) {
   statusBox.textContent = message || "";
   if (browserStatusText) browserStatusText.textContent = message || "Done";
+}
+
+function autoDoodle() {
+  const now = new Date();
+  const month = now.getMonth() + 1;
+  const day = now.getDate();
+
+  if (month === 4 && day === 1) return "april-fools";
+  if (month === 9 && day === 27) return "birthday";
+  if (month === 12 || month === 1) return "winter";
+  return "classic";
+}
+
+function doodleLabel(doodle) {
+  return {
+    "classic": "Classic",
+    "april-fools": "April Fools",
+    "birthday": "Birthday",
+    "winter": "Winter"
+  }[doodle] || "Classic";
+}
+
+function setDoodle(doodle, persist = true) {
+  const available = ["classic", "april-fools", "birthday", "winter"];
+  const next = doodle === "random"
+    ? available[Math.floor(Math.random() * available.length)]
+    : doodle;
+
+  currentDoodle = available.includes(next) ? next : "classic";
+  document.body.dataset.doodle = currentDoodle;
+  if (doodleBadge) doodleBadge.textContent = `${doodleLabel(currentDoodle)} Doodle`;
+  doodleButtons.forEach((button) => {
+    button.classList.toggle("is-active", button.dataset.doodle === currentDoodle);
+  });
+  if (persist) localStorage.setItem("oldoogleDoodle", currentDoodle);
+  setPet("happy", "ART", `${doodleLabel(currentDoodle).toLowerCase()} doodle`);
 }
 
 function setStartMenu(open) {
@@ -270,6 +309,18 @@ function handleStartAction(action) {
     return;
   }
 
+  if (action === "doodle-april") {
+    setDoodle("april-fools");
+    setStatus("April Fools doodle enabled.");
+    return;
+  }
+
+  if (action === "doodle-random") {
+    setDoodle("random");
+    setStatus(`${doodleLabel(currentDoodle)} doodle enabled.`);
+    return;
+  }
+
   if (action === "home") {
     input.value = "";
     resultsBox.innerHTML = "";
@@ -333,6 +384,13 @@ document.addEventListener("keydown", (event) => {
   if (event.key === "Escape") closeStartMenu();
 });
 
+doodleButtons.forEach((button) => {
+  button.addEventListener("click", () => {
+    setDoodle(button.dataset.doodle);
+    setStatus(`${doodleLabel(currentDoodle)} doodle enabled.`);
+  });
+});
+
 petSprite?.addEventListener("click", () => {
   const quips = [
     ["idle", "404", "still here", { bond: 1 }],
@@ -385,3 +443,4 @@ window.addEventListener("beforeunload", savePetState);
 
 applyPetEnabled();
 updatePetPanel();
+setDoodle(currentDoodle, false);
