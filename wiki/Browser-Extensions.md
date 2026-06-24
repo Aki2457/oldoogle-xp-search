@@ -1,8 +1,8 @@
 # Browser Extensions
 
-Oldoodle includes extension source for Chromium-based browsers and Firefox.
+Oldoodle includes extension source for Oldoodle Chrome and Oldoodle Firefox.
 
-## Chromium
+## Oldoodle Chrome
 
 Folder:
 
@@ -12,16 +12,15 @@ extensions/chromium/
 
 Package outputs:
 
-- `oldoodle-xp-chromium-extension.zip`
-- `oldoodle-xp-chromium-extension.crx`
+- `Oldoodle_Chrome.zip`
 
-The Chromium extension:
+Oldoodle Chrome:
 
 - Overrides the new tab page.
 - Adds an Oldoodle toolbox popup.
 - Can call the hosted Oldoodle search API.
 
-## Firefox
+## Oldoodle Firefox
 
 Folder:
 
@@ -31,9 +30,9 @@ extensions/firefox/
 
 Package output:
 
-- `oldoodle-xp-firefox-extension.xpi`
+- `Oldoodle_Firefox.xpi`
 
-The Firefox extension:
+Oldoodle Firefox:
 
 - Overrides the new tab page.
 - Adds a toolbar/sidebar toolbox.

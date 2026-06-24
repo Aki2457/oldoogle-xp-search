@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
-  "name": "Oldoodle XP Homepage",
-  "description": "Windows XP styled Oldoodle homepage and new tab page.",
+  "name": "Oldoodle Chrome",
+  "description": "Windows XP styled Oldoodle homepage and new tab page for Chrome.",
   "version": "1.0.0",
   "action": {
     "default_title": "Oldoodle Search",

@@ -19,7 +19,7 @@
 
 ## Browser Toolbox Widgets
 
-The Chromium and Firefox extensions include a popup toolbox:
+The Oldoodle Chrome and Oldoodle Firefox extensions include a popup toolbox:
 
 - Search.
 - Timer.
@@ -35,9 +35,8 @@ The Chromium and Firefox extensions include a popup toolbox:
 
 ## Packaging
 
-- Chromium extension ZIP.
-- Chromium CRX.
-- Firefox XPI.
+- Oldoodle Chrome ZIP.
+- Oldoodle Firefox XPI.
 - Windows app launcher.
 - Release ZIP.
 - Torrent metadata.

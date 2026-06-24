@@ -18,8 +18,8 @@ dist/Oldoodle_Release.zip
 Oldoodle/
   Oldoodle_Chromium.exe
   Oldoodle_Extension/
-    Oldoodle_Extension_Chrome.crx
-    Oldoodle_Extension_FireFox.xpi
+    Oldoodle_Chrome.zip
+    Oldoodle_Firefox.xpi
     Oldoodle_Extension_ReadMe.md
   Oldoodle_Torrent/
     Oldoodle_Torrent.md

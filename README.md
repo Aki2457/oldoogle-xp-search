@@ -21,7 +21,7 @@ Oldoodle XP is a Windows XP / Internet Explorer styled search app with live resu
 - JSON endpoint for testing and integrations.
 - Doodles: Classic, April Fools, Birthday, Winter, Random.
 - Functional XP Start menu.
-- Chromium and Firefox extension source folders.
+- Oldoodle Chrome and Oldoodle Firefox extension source folders.
 - Windows launcher and Chromium launcher build scripts.
 - Release folder/zip builder with torrent metadata.
 - GitHub Pages static mini-app.
@@ -208,13 +208,13 @@ Package extensions:
 npm run package:extensions
 ```
 
-Chromium extension behavior:
+Oldoodle Chrome extension behavior:
 
 - Overrides the new tab page.
 - Uses the XP Oldoodle page.
 - Talks to a local Oldoodle server at `localhost:3000` for live search.
 
-Firefox extension behavior:
+Oldoodle Firefox extension behavior:
 
 - Overrides the new tab page.
 - Includes homepage override support.
@@ -262,8 +262,8 @@ The release bundle contains:
 Oldoodle/
   Oldoodle_Chromium.exe
   Oldoodle_Extension/
-    Oldoodle_Extension_Chrome.crx
-    Oldoodle_Extension_FireFox.xpi
+    Oldoodle_Chrome.zip
+    Oldoodle_Firefox.xpi
     Oldoodle_Extension_ReadMe.md
   Oldoodle_Torrent/
     Oldoodle_Torrent.md

@@ -24,7 +24,7 @@ function renderDemo(query) {
     {
       title: "Download Oldoodle XP release",
       url: "github.com/Aki2457/oldoogle-xp-search/releases/download/v1.0.1/Oldoodle_Release.zip",
-      text: "Get the Chromium launcher, Chrome CRX, Firefox XPI, torrent metadata, and install guides."
+      text: "Get the Oldoodle Chrome ZIP, Oldoodle Firefox XPI, torrent metadata, and install guides."
     },
     {
       title: "Run local live search",

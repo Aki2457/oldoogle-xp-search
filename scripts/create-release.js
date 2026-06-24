@@ -118,20 +118,20 @@ fs.mkdirSync(torrentDir, { recursive: true });
 fs.mkdirSync(appGuideDir, { recursive: true });
 
 copy(path.join(dist, "Oldoodle-Chromium-XP.exe"), path.join(oldoodle, "Oldoodle_Chromium.exe"));
-copy(path.join(dist, "oldoodle-xp-chromium-extension.crx"), path.join(extensionDir, "Oldoodle_Extension_Chrome.crx"));
-copy(path.join(dist, "oldoodle-xp-firefox-extension.xpi"), path.join(extensionDir, "Oldoodle_Extension_FireFox.xpi"));
+copy(path.join(dist, "Oldoodle_Chrome.zip"), path.join(extensionDir, "Oldoodle_Chrome.zip"));
+copy(path.join(dist, "Oldoodle_Firefox.xpi"), path.join(extensionDir, "Oldoodle_Firefox.xpi"));
 
 write(path.join(extensionDir, "Oldoodle_Extension_ReadMe.md"), `
 # Oldoodle Extension
 
 This folder contains the browser extension builds.
 
-- \`Oldoodle_Extension_Chrome.crx\` is for Chromium-based browsers.
-- \`Oldoodle_Extension_FireFox.xpi\` is for Firefox.
+- \`Oldoodle_Chrome.zip\` is Oldoodle Chrome.
+- \`Oldoodle_Firefox.xpi\` is Oldoodle Firefox.
 
 Live search widgets use the local Oldoodle server at \`http://localhost:3000\`. Start the app server before expecting Apify-backed searches to work from an extension page.
 
-If Chrome blocks local CRX installs, use Developer Mode and load \`extensions/chromium\` unpacked from the source repo.
+Use Developer Mode to load the extracted \`Oldoodle_Chrome.zip\` folder, or load \`extensions/chromium\` unpacked from the source repo.
 `);
 
 write(path.join(torrentDir, "Oldoodle_Torrent.md"), `
@@ -178,10 +178,10 @@ This opens the downloaded Chromium build with the Oldoodle extension loaded.
 
 1. Open \`chrome://extensions\`.
 2. Enable Developer mode.
-3. Drag \`Oldoodle_Extension_Chrome.crx\` into the page, or load \`extensions/chromium\` unpacked from the source repo.
+3. Load \`Oldoodle_Chrome.zip\` as an unpacked extension folder after extracting it, or load \`extensions/chromium\` unpacked from the source repo.
 4. Start the Oldoodle local app server if you want live Apify search widgets.
 
-Chrome may block local CRX installs that are not from the Chrome Web Store. In that case, use unpacked loading.
+Chrome blocks most local extension package installs that are not from the Chrome Web Store. Use unpacked loading for local testing.
 `);
 
 write(path.join(readmeDir, "Oldoodle_FireFox_Guide.md"), `
@@ -191,7 +191,7 @@ write(path.join(readmeDir, "Oldoodle_FireFox_Guide.md"), `
 
 1. Open \`about:debugging#/runtime/this-firefox\`.
 2. Click **Load Temporary Add-on**.
-3. Select \`Oldoodle_Extension_FireFox.xpi\`.
+3. Select \`Oldoodle_Firefox.xpi\`.
 
 Firefox usually requires signing for permanent extension installs. For permanent distribution, submit the XPI to Mozilla Add-ons for signing.
 

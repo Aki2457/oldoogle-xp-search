@@ -1,7 +1,7 @@
 {
   "manifest_version": 2,
-  "name": "Oldoodle XP Homepage",
-  "description": "Windows XP styled Oldoodle homepage and new tab page.",
+  "name": "Oldoodle Firefox",
+  "description": "Windows XP styled Oldoodle homepage and new tab page for Firefox.",
   "version": "1.0.0",
   "browser_action": {
     "default_title": "Oldoodle Search",
@@ -29,7 +29,7 @@
   ],
   "browser_specific_settings": {
     "gecko": {
-      "id": "oldoodle-xp-homepage@local"
+      "id": "oldoodle-firefox@local"
     }
   }
 }
