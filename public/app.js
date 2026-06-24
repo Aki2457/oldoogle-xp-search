@@ -1,6 +1,8 @@
 const form = document.querySelector("#searchForm");
 const input = document.querySelector("#query");
 const statusBox = document.querySelector("#status");
+const searchProgress = document.querySelector("#searchProgress");
+const searchProgressFill = document.querySelector("#searchProgressFill");
 const resultsBox = document.querySelector("#results");
 const lucky = document.querySelector("#lucky");
 const pet = document.querySelector("#codexPet");
@@ -37,6 +39,15 @@ let apifyApiKey = localStorage.getItem("oldoodleApifyApiKey") || "";
 const apiBase = ["chrome-extension:", "moz-extension:", "file:"].includes(location.protocol)
   ? "http://localhost:3000"
   : "";
+
+function setSearchProgress(state, value = 0) {
+  if (!searchProgress || !searchProgressFill) return;
+
+  const active = state && state !== "idle";
+  searchProgress.className = `search-progress${active ? " is-active" : ""}${state ? ` is-${state}` : ""}`;
+  searchProgress.setAttribute("aria-hidden", String(!active));
+  searchProgressFill.style.width = `${clamp(value)}%`;
+}
 
 function clamp(value) {
   return Math.max(0, Math.min(100, value));
@@ -250,6 +261,7 @@ function runSearch(query) {
   if (activeEvents) activeEvents.close();
   resultsBox.innerHTML = "";
   setStatus("Starting search...");
+  setSearchProgress("starting", 12);
   nudgePet({ energy: -3, focus: 4, mood: "searching" });
   setPet("searching", "PING", `scanning "${query}"`, 999999);
 
@@ -261,12 +273,14 @@ function runSearch(query) {
   activeEvents.addEventListener("status", (event) => {
     const data = JSON.parse(event.data);
     setStatus(data.message);
+    setSearchProgress("connecting", 46);
     setPet("searching", "PING", data.message.toLowerCase(), 999999);
   });
 
   activeEvents.addEventListener("results", (event) => {
     const data = JSON.parse(event.data);
     setStatus(`Showing ${data.count} live ${data.provider || "search"} results for "${data.query}"`);
+    setSearchProgress("receiving", 82);
     renderResults(data.items);
     nudgePet({ energy: -2, focus: 8, bond: 2, mood: "happy" });
     setPet("happy", "OK", `${data.count} results cached`);
@@ -274,6 +288,8 @@ function runSearch(query) {
   });
 
   activeEvents.addEventListener("done", () => {
+    setSearchProgress("complete", 100);
+    window.setTimeout(() => setSearchProgress("idle"), 700);
     activeEvents.close();
     activeEvents = null;
   });
@@ -282,13 +298,16 @@ function runSearch(query) {
     if (event.data) {
       const data = JSON.parse(event.data);
       setStatus(data.message);
+      setSearchProgress("error", 100);
       nudgePet({ energy: -5, focus: -4, bond: 1, mood: "error" });
       setPet("error", "ERR", data.message);
     } else {
       setStatus("The live search connection closed.");
+      setSearchProgress("error", 100);
       nudgePet({ energy: -3, focus: -2, mood: "worried" });
       setPet("worried", "LOST", "connection closed");
     }
+    window.setTimeout(() => setSearchProgress("idle"), 1000);
     activeEvents?.close();
     activeEvents = null;
   });

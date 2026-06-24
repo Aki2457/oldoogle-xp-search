@@ -540,6 +540,52 @@ button {
   text-align: left;
 }
 
+.search-progress {
+  display: none;
+  width: min(820px, calc(100vw - 48px));
+  height: 17px;
+  margin: 0 auto 12px;
+  padding: 2px;
+  border: 1px solid #7f9db9;
+  background: #fff;
+  box-shadow: inset 1px 1px 0 #d6d6d6, inset -1px -1px 0 #f8f8f8;
+  overflow: hidden;
+}
+
+.search-progress.is-active {
+  display: block;
+}
+
+.search-progress span {
+  display: block;
+  width: 0;
+  height: 100%;
+  background: linear-gradient(90deg, #1f8f24 0 12px, #5cc85b 12px 18px, #1f8f24 18px 30px);
+  background-size: 30px 100%;
+  transition: width .18s ease-out;
+  animation: progress-stripes .55s steps(6) infinite;
+}
+
+.search-progress.is-complete span {
+  background: #2faa2f;
+  animation: none;
+}
+
+.search-progress.is-error span {
+  background: #c13a2f;
+  animation: none;
+}
+
+@keyframes progress-stripes {
+  from {
+    background-position: 0 0;
+  }
+
+  to {
+    background-position: 30px 0;
+  }
+}
+
 .results {
   width: min(820px, calc(100vw - 48px));
   margin: 0 auto;
