@@ -117,9 +117,9 @@ fs.mkdirSync(extensionDir, { recursive: true });
 fs.mkdirSync(torrentDir, { recursive: true });
 fs.mkdirSync(appGuideDir, { recursive: true });
 
-copy(path.join(dist, "Oldoogle-Chromium-XP.exe"), path.join(oldoodle, "Oldoodle_Chromium.exe"));
-copy(path.join(dist, "oldoogle-xp-chromium-extension.crx"), path.join(extensionDir, "Oldoodle_Extension_Chrome.crx"));
-copy(path.join(dist, "oldoogle-xp-firefox-extension.xpi"), path.join(extensionDir, "Oldoodle_Extension_FireFox.xpi"));
+copy(path.join(dist, "Oldoodle-Chromium-XP.exe"), path.join(oldoodle, "Oldoodle_Chromium.exe"));
+copy(path.join(dist, "oldoodle-xp-chromium-extension.crx"), path.join(extensionDir, "Oldoodle_Extension_Chrome.crx"));
+copy(path.join(dist, "oldoodle-xp-firefox-extension.xpi"), path.join(extensionDir, "Oldoodle_Extension_FireFox.xpi"));
 
 write(path.join(extensionDir, "Oldoodle_Extension_ReadMe.md"), `
 # Oldoodle Extension
@@ -129,7 +129,7 @@ This folder contains the browser extension builds.
 - \`Oldoodle_Extension_Chrome.crx\` is for Chromium-based browsers.
 - \`Oldoodle_Extension_FireFox.xpi\` is for Firefox.
 
-Live search widgets use the local Oldoogle server at \`http://localhost:3000\`. Start the app server before expecting Apify-backed searches to work from an extension page.
+Live search widgets use the local Oldoodle server at \`http://localhost:3000\`. Start the app server before expecting Apify-backed searches to work from an extension page.
 
 If Chrome blocks local CRX installs, use Developer Mode and load \`extensions/chromium\` unpacked from the source repo.
 `);
@@ -179,7 +179,7 @@ This opens the downloaded Chromium build with the Oldoodle extension loaded.
 1. Open \`chrome://extensions\`.
 2. Enable Developer mode.
 3. Drag \`Oldoodle_Extension_Chrome.crx\` into the page, or load \`extensions/chromium\` unpacked from the source repo.
-4. Start the Oldoogle local app server if you want live Apify search widgets.
+4. Start the Oldoodle local app server if you want live Apify search widgets.
 
 Chrome may block local CRX installs that are not from the Chrome Web Store. In that case, use unpacked loading.
 `);

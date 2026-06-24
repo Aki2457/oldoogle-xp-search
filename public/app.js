@@ -32,8 +32,8 @@ if (localStorage.getItem("oldooleActualPetApplied") !== "true") {
 }
 let petEnabled = localStorage.getItem("oldoolePetEnabled") !== "false";
 let petState = loadPetState();
-let currentDoodle = localStorage.getItem("oldoogleDoodle") || autoDoodle();
-let apifyApiKey = localStorage.getItem("oldoogleApifyApiKey") || "";
+let currentDoodle = localStorage.getItem("oldoodleDoodle") || autoDoodle();
+let apifyApiKey = localStorage.getItem("oldoodleApifyApiKey") || "";
 const apiBase = ["chrome-extension:", "moz-extension:", "file:"].includes(location.protocol)
   ? "http://localhost:3000"
   : "";
@@ -153,12 +153,12 @@ function openApiKeyDialog() {
 function saveApiKey(value) {
   apifyApiKey = String(value || "").trim();
   if (apifyApiKey) {
-    localStorage.setItem("oldoogleApifyApiKey", apifyApiKey);
-    localStorage.setItem("oldoogleApifyPromptSeen", "true");
+    localStorage.setItem("oldoodleApifyApiKey", apifyApiKey);
+    localStorage.setItem("oldoodleApifyPromptSeen", "true");
     setStatus("Apify API key saved.");
     setPet("happy", "KEY", "apify enabled");
   } else {
-    localStorage.removeItem("oldoogleApifyApiKey");
+    localStorage.removeItem("oldoodleApifyApiKey");
     setStatus("Apify API key cleared.");
     setPet("idle", "404", "default search");
   }
@@ -197,7 +197,7 @@ function setDoodle(doodle, persist = true) {
   doodleButtons.forEach((button) => {
     button.classList.toggle("is-active", button.dataset.doodle === currentDoodle);
   });
-  if (persist) localStorage.setItem("oldoogleDoodle", currentDoodle);
+  if (persist) localStorage.setItem("oldoodleDoodle", currentDoodle);
   setPet("happy", "ART", `${doodleLabel(currentDoodle).toLowerCase()} doodle`);
 }
 
@@ -382,7 +382,7 @@ function handleStartAction(action) {
   }
 
   if (action === "about") {
-    setStatus("Oldoogle XP Search: live Apify widgets in a classic shell.");
+    setStatus("Oldoodle XP Search: live Apify widgets in a classic shell.");
     setPet("happy", "?", "help loaded");
     return;
   }
@@ -399,7 +399,7 @@ function handleStartAction(action) {
   }
 
   if (action === "logoff") {
-    setStatus("Logged off Oldoogle User.");
+    setStatus("Logged off Oldoodle User.");
     setPet("worried", "BYE", "session idle");
     return;
   }
@@ -509,7 +509,7 @@ applyPetEnabled();
 updatePetPanel();
 setDoodle(currentDoodle, false);
 updateApiKeyStatus();
-if (!apifyApiKey && localStorage.getItem("oldoogleApifyPromptSeen") !== "true") {
-  localStorage.setItem("oldoogleApifyPromptSeen", "true");
+if (!apifyApiKey && localStorage.getItem("oldoodleApifyPromptSeen") !== "true") {
+  localStorage.setItem("oldoodleApifyPromptSeen", "true");
   window.setTimeout(openApiKeyDialog, 700);
 }

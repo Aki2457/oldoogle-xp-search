@@ -5,7 +5,7 @@ const path = require("path");
 const root = process.pkg ? path.dirname(process.execPath) : path.resolve(__dirname, "..");
 const chromePathFile = path.join(root, "chromium-path.txt");
 const fallbackChrome = path.join(root, "chromium-cache", "chromium");
-const profileDir = path.join(root, "chromium-oldoogle-profile");
+const profileDir = path.join(root, "chromium-oldoodle-profile");
 const extensionDir = path.join(root, "..", "extensions", "chromium");
 
 function findChrome(dir) {

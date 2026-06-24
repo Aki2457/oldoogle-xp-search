@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
-  "name": "Oldoogle XP Homepage",
-  "description": "Windows XP styled Oldoogle homepage and new tab page.",
+  "name": "Oldoodle XP Homepage",
+  "description": "Windows XP styled Oldoodle homepage and new tab page.",
   "version": "1.0.0",
   "action": {
     "default_title": "Oldoodle Search",

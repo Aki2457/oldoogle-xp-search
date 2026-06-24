@@ -293,7 +293,7 @@ function openBrowser(url) {
 if (require.main === module) {
   app.listen(port, "0.0.0.0", () => {
     const url = `http://localhost:${port}`;
-    console.log(`Oldoogle running at ${url}`);
+    console.log(`Oldoodle running at ${url}`);
     openBrowser(url);
   });
 }

@@ -12,8 +12,8 @@ extensions/chromium/
 
 Package outputs:
 
-- `oldoogle-xp-chromium-extension.zip`
-- `oldoogle-xp-chromium-extension.crx`
+- `oldoodle-xp-chromium-extension.zip`
+- `oldoodle-xp-chromium-extension.crx`
 
 The Chromium extension:
 
@@ -31,7 +31,7 @@ extensions/firefox/
 
 Package output:
 
-- `oldoogle-xp-firefox-extension.xpi`
+- `oldoodle-xp-firefox-extension.xpi`
 
 The Firefox extension:
 

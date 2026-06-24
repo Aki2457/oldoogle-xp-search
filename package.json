@@ -2,9 +2,9 @@
   "bin": "server.js",
   "scripts": {
     "start": "node server.js",
-    "build:exe": "pkg . --targets node18-win-x64 --output dist/Oldoogle-XP.exe",
-    "build:mac": "pkg . --targets node18-macos-x64 --output dist/Oldoogle-XP-macos-x64",
-    "build:linux": "pkg . --targets node18-linux-x64 --output dist/Oldoogle-XP-linux-x64",
+    "build:exe": "pkg . --targets node18-win-x64 --output dist/Oldoodle-XP.exe",
+    "build:mac": "pkg . --targets node18-macos-x64 --output dist/Oldoodle-XP-macos-x64",
+    "build:linux": "pkg . --targets node18-linux-x64 --output dist/Oldoodle-XP-linux-x64",
     "build:all": "npm run build:exe && npm run build:mac && npm run build:linux",
     "package:extensions": "powershell -ExecutionPolicy Bypass -File scripts/package-extensions.ps1",
     "download:chromium": "node scripts/download-chromium.js",

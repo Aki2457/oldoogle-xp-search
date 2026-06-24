@@ -586,7 +586,7 @@ button {
   line-height: 1.35;
 }
 
-.oldoogle-footer {
+.oldoodle-footer {
   width: min(560px, calc(100vw - 48px));
   margin: 40px auto 0;
   display: flex;
@@ -1181,7 +1181,7 @@ button {
     padding-right: 5px;
   }
 
-  .oldoogle-footer {
+  .oldoodle-footer {
     flex-wrap: wrap;
     gap: 9px 16px;
   }
