@@ -6,6 +6,7 @@ require("dotenv").config({ path: path.join(runtimeDir, ".env") });
 require("dotenv").config();
 
 const token = process.env.DISCORD_BOT_TOKEN;
+const serverId = process.env.DISCORD_SERVER_ID;
 const defaultChannelId = process.env.DISCORD_DEV_CHANNEL_ID;
 const replyPrefix = process.env.DISCORD_REPLY_PREFIX || "!oldoodle";
 const statusText = process.env.DISCORD_STATUS_TEXT || "developing Oldoodle";
@@ -66,6 +67,7 @@ client.once("ready", async () => {
 
 client.on("messageCreate", async (message) => {
   if (message.author.bot) return;
+  if (serverId && message.guildId && message.guildId !== serverId) return;
 
   const isMention = message.mentions.has(client.user);
   const isPrefixed = message.content.trim().toLowerCase().startsWith(replyPrefix.toLowerCase());

@@ -129,7 +129,8 @@ SMTP_PASS=smtp_demo_replace_me
 
 # Optional Discord development bot.
 DISCORD_BOT_TOKEN=discord_bot_token_demo_replace_me
-DISCORD_DEV_CHANNEL_ID=000000000000000000
+DISCORD_SERVER_ID=1367877281552531486
+DISCORD_DEV_CHANNEL_ID=1519364758191607839
 DISCORD_REPLY_PREFIX=!oldoodle
 DISCORD_STATUS_TEXT=developing Oldoodle
 ```
@@ -145,7 +146,9 @@ Oldoodle includes an optional Discord dev helper for app-development notes and l
 2. Add a bot and copy its token into local `.env` as `DISCORD_BOT_TOKEN`.
 3. Enable the bot's `MESSAGE CONTENT INTENT` in the Discord Developer Portal.
 4. Invite the bot to your server with bot permissions to read and send messages.
-5. Copy the target channel ID into `DISCORD_DEV_CHANNEL_ID`.
+5. Use Oldoodle's development server/channel IDs:
+   `DISCORD_SERVER_ID=1367877281552531486`
+   `DISCORD_DEV_CHANNEL_ID=1519364758191607839`
 6. Run:
 
 ```sh
