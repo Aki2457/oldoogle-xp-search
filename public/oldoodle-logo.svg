@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="560" height="130" viewBox="0 0 560 130" role="img" aria-labelledby="title">
+  <title id="title">Oldoodle</title>
+  <rect width="560" height="130" fill="none"/>
+  <g font-family="Georgia, 'Times New Roman', serif" font-size="86" font-weight="400">
+    <text x="16" y="90" fill="#1a62d2">O</text>
+    <text x="78" y="90" fill="#d93326">l</text>
+    <text x="108" y="90" fill="#f7bf20">d</text>
+    <text x="164" y="90" fill="#1a62d2">o</text>
+    <text x="219" y="90" fill="#18954b">o</text>
+    <text x="274" y="90" fill="#d93326">d</text>
+    <text x="331" y="90" fill="#18954b">l</text>
+    <text x="361" y="90" fill="#f7bf20">e</text>
+  </g>
+</svg>

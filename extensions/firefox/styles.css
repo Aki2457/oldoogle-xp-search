@@ -279,21 +279,17 @@ body {
   z-index: 1;
   margin: 0 auto 20px;
   text-align: center;
-  font-family: Georgia, "Times New Roman", serif;
-  font-size: clamp(56px, 7.7vw, 88px);
-  font-weight: 400;
-  letter-spacing: 0;
-  line-height: .95;
-  text-shadow: .018em .018em 0 rgba(0, 0, 0, .08);
+  line-height: 0;
+}
+
+.logo img {
+  width: min(360px, calc(100vw - 60px));
+  height: auto;
+  image-rendering: auto;
 }
 
 body[data-doodle="april-fools"] .logo {
   transform: rotate(-1deg);
-}
-
-body[data-doodle="april-fools"] .logo span:nth-child(3) {
-  display: inline-block;
-  transform: translateY(-9px) rotate(9deg);
 }
 
 body[data-doodle="april-fools"] .logo::before {
@@ -344,7 +340,7 @@ body[data-doodle="birthday"] .doodle-badge {
 }
 
 body[data-doodle="winter"] .logo {
-  text-shadow: .018em .018em 0 rgba(0, 0, 0, .08), 0 0 8px rgba(112, 169, 255, .35);
+  filter: drop-shadow(0 0 8px rgba(112, 169, 255, .35));
 }
 
 body[data-doodle="winter"] .logo::before {
@@ -370,15 +366,6 @@ body[data-doodle="winter"] .doodle-badge {
   background: #eaf6ff;
   color: #24517c;
 }
-
-.logo span:nth-child(1),
-.logo span:nth-child(4) { color: #1a62d2; }
-.logo span:nth-child(2),
-.logo span:nth-child(6) { color: #d93326; }
-.logo span:nth-child(3),
-.logo span:nth-child(8) { color: #f7bf20; }
-.logo span:nth-child(5),
-.logo span:nth-child(7) { color: #18954b; }
 
 .search-box {
   width: min(530px, calc(100vw - 48px));
