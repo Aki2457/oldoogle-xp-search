@@ -644,14 +644,25 @@ button {
   display: flex;
   align-items: center;
   justify-content: space-between;
+  gap: 8px;
   padding: 5px 8px;
   color: #fff;
   background: linear-gradient(#0b7bff, #0052c7);
 }
 
 .game-library header div {
+  flex: 1;
   display: grid;
   gap: 1px;
+}
+
+.game-title-icon {
+  width: 32px;
+  height: 32px;
+  padding: 3px;
+  border: 1px solid rgba(255, 255, 255, .7);
+  background: #fff;
+  image-rendering: pixelated;
 }
 
 .game-library header span {
@@ -1094,6 +1105,12 @@ button {
 .start-icon.star {
   color: #df8d00;
   font: 700 24px Arial, sans-serif;
+}
+
+.start-icon.image-icon img {
+  width: 24px;
+  height: 24px;
+  image-rendering: pixelated;
 }
 
 .start-divider {

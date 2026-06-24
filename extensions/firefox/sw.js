@@ -6,6 +6,7 @@ const SHELL_ASSETS = [
   "/app.js",
   "/site-icon.svg",
   "/attribution-mark.svg",
+  "/airplane-icon.svg",
   "/oldoodle-logo.svg",
   "/made-possible.html"
 ];
