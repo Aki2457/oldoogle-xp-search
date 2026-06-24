@@ -54,9 +54,10 @@ let apifyApiKey = localStorage.getItem("oldoodleApifyApiKey") || "";
 let searchProviderSetting = localStorage.getItem("oldoodleSearchProvider") || "duckduckgo";
 let searchEndpointMode = localStorage.getItem("oldoodleSearchEndpointMode") || "auto";
 let customSearchEndpoint = localStorage.getItem("oldoodleSearchEndpoint") || "";
-const apiBase = ["chrome-extension:", "moz-extension:", "file:"].includes(location.protocol)
+const deployedApiBase = normalizeEndpoint(window.OLDOODLE_API_BASE || "");
+const apiBase = deployedApiBase || (["chrome-extension:", "moz-extension:", "file:"].includes(location.protocol)
   ? "http://localhost:3000"
-  : "";
+  : "");
 
 function setSearchProgress(state, value = 0) {
   if (!searchProgress || !searchProgressFill) return;
@@ -399,6 +400,40 @@ function renderResults(items) {
   }
 }
 
+function makeSearchFallbackItems(query) {
+  const encoded = encodeURIComponent(query);
+  return [
+    {
+      title: `DuckDuckGo results for "${query}"`,
+      url: `https://duckduckgo.com/?q=${encoded}`,
+      description: "Static hosting cannot run Oldoodle's live API, so this opens a normal web search.",
+      type: "fallback"
+    },
+    {
+      title: `Google results for "${query}"`,
+      url: `https://www.google.com/search?q=${encoded}`,
+      description: "Use this while the Zeabur API server is waking up or unavailable.",
+      type: "fallback"
+    },
+    {
+      title: `Old web snapshots for "${query}"`,
+      url: `https://web.archive.org/web/*/${encoded}`,
+      description: "A very Oldoodle-flavored fallback for exploring older pages and archived links.",
+      type: "fallback"
+    }
+  ];
+}
+
+function renderSearchFallback(query, reason = "Live search API is not available from this page.") {
+  renderResults(makeSearchFallbackItems(query));
+  setStatus(`${reason} Showing fallback search links for "${query}".`);
+  setSearchProgress("complete", 100);
+  nudgePet({ energy: -2, focus: 2, bond: 1, mood: "worried" });
+  setPet("worried", "404?", "static search fallback");
+  if (browserStatusText) browserStatusText.textContent = "Fallback";
+  window.setTimeout(() => setSearchProgress("idle"), 900);
+}
+
 function runSearch(query) {
   if (activeEvents) activeEvents.close();
   resultsBox.innerHTML = "";
@@ -407,10 +442,21 @@ function runSearch(query) {
   nudgePet({ energy: -3, focus: 4, mood: "searching" });
   setPet("searching", "PING", `scanning "${query}"`, 999999);
 
-  const searchUrl = new URL(`${getConfiguredApiBase()}/api/search`, location.href);
+  const configuredApiBase = getConfiguredApiBase();
+  if (!configuredApiBase && location.hostname.endsWith("github.io")) {
+    renderSearchFallback(query, "GitHub Pages is a static host.");
+    return;
+  }
+
+  const searchUrl = new URL(`${configuredApiBase}/api/search`, location.href);
   searchUrl.searchParams.set("q", query);
   searchUrl.searchParams.set("provider", searchProviderSetting);
   if (searchProviderSetting === "apify" && apifyApiKey) searchUrl.searchParams.set("apifyToken", apifyApiKey);
+
+  if (typeof EventSource !== "function") {
+    renderSearchFallback(query, "This browser does not support live search events.");
+    return;
+  }
 
   activeEvents = new EventSource(searchUrl.toString());
   activeEvents.addEventListener("status", (event) => {
@@ -445,13 +491,9 @@ function runSearch(query) {
       nudgePet({ energy: -5, focus: -4, bond: 1, mood: "error" });
       setPet("error", "ERR", data.message);
     } else {
-      setStatus("The live search connection closed.");
-      setSearchProgress("error", 100);
-      nudgePet({ energy: -3, focus: -2, mood: "worried" });
-      setPet("worried", "LOST", "connection closed");
+      renderSearchFallback(query, "The live search connection closed.");
     }
-    if (apiBase) openGameLibrary("dino");
-    window.setTimeout(() => setSearchProgress("idle"), 1000);
+    if (configuredApiBase) openGameLibrary("dino");
     activeEvents?.close();
     activeEvents = null;
   });
