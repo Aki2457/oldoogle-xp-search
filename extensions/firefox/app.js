@@ -17,6 +17,12 @@ const startButton = document.querySelector("#startButton");
 const startMenu = document.querySelector("#startMenu");
 const doodleBadge = document.querySelector("#doodleBadge");
 const doodleButtons = document.querySelectorAll("[data-doodle]");
+const apiKeyButton = document.querySelector("#apiKeyButton");
+const clearApiKeyButton = document.querySelector("#clearApiKeyButton");
+const apiKeyStatus = document.querySelector("#apiKeyStatus");
+const apiKeyDialog = document.querySelector("#apiKeyDialog");
+const apiKeyInput = document.querySelector("#apiKeyInput");
+const apiKeySave = document.querySelector("#apiKeySave");
 
 let activeEvents;
 let petTimer;
@@ -27,6 +33,7 @@ if (localStorage.getItem("oldooleActualPetApplied") !== "true") {
 let petEnabled = localStorage.getItem("oldoolePetEnabled") !== "false";
 let petState = loadPetState();
 let currentDoodle = localStorage.getItem("oldoogleDoodle") || autoDoodle();
+let apifyApiKey = localStorage.getItem("oldoogleApifyApiKey") || "";
 const apiBase = ["chrome-extension:", "moz-extension:", "file:"].includes(location.protocol)
   ? "http://localhost:3000"
   : "";
@@ -126,6 +133,38 @@ function setStatus(message) {
   if (browserStatusText) browserStatusText.textContent = message || "Done";
 }
 
+function updateApiKeyStatus() {
+  if (!apiKeyStatus) return;
+  apiKeyStatus.textContent = apifyApiKey ? "Using Apify API key" : "Using default search";
+  apiKeyStatus.classList.toggle("has-key", Boolean(apifyApiKey));
+}
+
+function openApiKeyDialog() {
+  if (!apiKeyDialog || !apiKeyInput) return;
+  apiKeyInput.value = apifyApiKey;
+  if (typeof apiKeyDialog.showModal === "function") {
+    apiKeyDialog.showModal();
+  } else {
+    const value = window.prompt("Apify API key", apifyApiKey);
+    if (value !== null) saveApiKey(value);
+  }
+}
+
+function saveApiKey(value) {
+  apifyApiKey = String(value || "").trim();
+  if (apifyApiKey) {
+    localStorage.setItem("oldoogleApifyApiKey", apifyApiKey);
+    localStorage.setItem("oldoogleApifyPromptSeen", "true");
+    setStatus("Apify API key saved.");
+    setPet("happy", "KEY", "apify enabled");
+  } else {
+    localStorage.removeItem("oldoogleApifyApiKey");
+    setStatus("Apify API key cleared.");
+    setPet("idle", "404", "default search");
+  }
+  updateApiKeyStatus();
+}
+
 function autoDoodle() {
   const now = new Date();
   const month = now.getMonth() + 1;
@@ -214,7 +253,11 @@ function runSearch(query) {
   nudgePet({ energy: -3, focus: 4, mood: "searching" });
   setPet("searching", "PING", `scanning "${query}"`, 999999);
 
-  activeEvents = new EventSource(`${apiBase}/api/search?q=${encodeURIComponent(query)}`);
+  const searchUrl = new URL(`${apiBase}/api/search`, location.href);
+  searchUrl.searchParams.set("q", query);
+  if (apifyApiKey) searchUrl.searchParams.set("apifyToken", apifyApiKey);
+
+  activeEvents = new EventSource(searchUrl.toString());
   activeEvents.addEventListener("status", (event) => {
     const data = JSON.parse(event.data);
     setStatus(data.message);
@@ -350,6 +393,11 @@ function handleStartAction(action) {
     return;
   }
 
+  if (action === "api-key") {
+    openApiKeyDialog();
+    return;
+  }
+
   if (action === "logoff") {
     setStatus("Logged off Oldoogle User.");
     setPet("worried", "BYE", "session idle");
@@ -389,6 +437,22 @@ doodleButtons.forEach((button) => {
     setDoodle(button.dataset.doodle);
     setStatus(`${doodleLabel(currentDoodle)} doodle enabled.`);
   });
+});
+
+apiKeyButton?.addEventListener("click", openApiKeyDialog);
+
+clearApiKeyButton?.addEventListener("click", () => saveApiKey(""));
+
+apiKeyDialog?.addEventListener("close", () => {
+  if (apiKeyDialog.returnValue === "save") {
+    saveApiKey(apiKeyInput?.value || "");
+  }
+});
+
+apiKeySave?.addEventListener("click", (event) => {
+  event.preventDefault();
+  saveApiKey(apiKeyInput?.value || "");
+  apiKeyDialog?.close();
 });
 
 petSprite?.addEventListener("click", () => {
@@ -444,3 +508,8 @@ window.addEventListener("beforeunload", savePetState);
 applyPetEnabled();
 updatePetPanel();
 setDoodle(currentDoodle, false);
+updateApiKeyStatus();
+if (!apifyApiKey && localStorage.getItem("oldoogleApifyPromptSeen") !== "true") {
+  localStorage.setItem("oldoogleApifyPromptSeen", "true");
+  window.setTimeout(openApiKeyDialog, 700);
+}

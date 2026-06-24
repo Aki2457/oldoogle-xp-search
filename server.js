@@ -31,13 +31,18 @@ function sendEvent(res, event, data) {
   res.write(`data: ${JSON.stringify(data)}\n\n`);
 }
 
-async function apify(pathname, options = {}) {
-  if (!token) {
+function getApifyToken(req) {
+  const supplied = String(req?.query?.apifyToken || req?.headers?.["x-apify-token"] || "").trim();
+  return supplied || token;
+}
+
+async function apify(pathname, options = {}, apifyToken = token) {
+  if (!apifyToken) {
     throw new Error("APIFY_TOKEN is missing from .env");
   }
 
   const url = new URL(`https://api.apify.com/v2/${pathname}`);
-  url.searchParams.set("token", token);
+  url.searchParams.set("token", apifyToken);
 
   const response = await fetch(url, {
     ...options,
@@ -134,7 +139,7 @@ async function duckDuckGoSearch(query) {
   }
 }
 
-async function apifySearch(query, sendStatus = () => {}) {
+async function apifySearch(query, sendStatus = () => {}, apifyToken = token) {
   sendStatus({ message: "Dialing Apify..." });
 
   const input = {
@@ -151,7 +156,7 @@ async function apifySearch(query, sendStatus = () => {}) {
   const run = await apify(`acts/${encodeURIComponent(actorId)}/runs`, {
     method: "POST",
     body: JSON.stringify(input)
-  });
+  }, apifyToken);
 
   const runId = run.data.id;
   sendStatus({ message: "Search bot is running...", runId });
@@ -159,7 +164,7 @@ async function apifySearch(query, sendStatus = () => {}) {
   let finishedRun = run.data;
   for (let attempt = 0; attempt < 90; attempt += 1) {
     await new Promise((resolve) => setTimeout(resolve, 1500));
-    const current = await apify(`actor-runs/${runId}`);
+    const current = await apify(`actor-runs/${runId}`, {}, apifyToken);
     finishedRun = current.data;
     sendStatus({
       message: `Apify status: ${finishedRun.status}`,
@@ -176,7 +181,7 @@ async function apifySearch(query, sendStatus = () => {}) {
   }
 
   const datasetId = finishedRun.defaultDatasetId;
-  const dataset = await apify(`datasets/${datasetId}/items?clean=true`);
+  const dataset = await apify(`datasets/${datasetId}/items?clean=true`, {}, apifyToken);
   const items = Array.isArray(dataset) ? dataset.flatMap((entry) => {
     if (Array.isArray(entry.organicResults)) return entry.organicResults;
     if (Array.isArray(entry.results)) return entry.results;
@@ -186,11 +191,11 @@ async function apifySearch(query, sendStatus = () => {}) {
   return items.slice(0, 12).map(normalizeItem);
 }
 
-async function search(query, sendStatus = () => {}) {
-  if (searchProvider === "apify") {
+async function search(query, sendStatus = () => {}, apifyToken = token, preferredProvider = searchProvider) {
+  if (preferredProvider === "apify") {
     return {
       provider: "apify",
-      items: await apifySearch(query, sendStatus)
+      items: await apifySearch(query, sendStatus, apifyToken)
     };
   }
 
@@ -199,11 +204,11 @@ async function search(query, sendStatus = () => {}) {
     const items = await duckDuckGoSearch(query);
     return { provider: "duckduckgo", items };
   } catch (error) {
-    if (!token) throw error;
+    if (!apifyToken) throw error;
     sendStatus({ message: "Fast index missed; falling back to Apify..." });
     return {
       provider: "apify",
-      items: await apifySearch(query, sendStatus)
+      items: await apifySearch(query, sendStatus, apifyToken)
     };
   }
 }
@@ -229,7 +234,9 @@ app.get("/api/search.json", async (req, res) => {
   }
 
   try {
-    const result = await search(query);
+    const apifyToken = getApifyToken(req);
+    const provider = req.query.apifyToken ? "apify" : searchProvider;
+    const result = await search(query, undefined, apifyToken, provider);
     res.json({
       query,
       provider: result.provider,
@@ -254,7 +261,9 @@ app.get("/api/search", async (req, res) => {
   res.flushHeaders?.();
 
   try {
-    const result = await search(query, (status) => sendEvent(res, "status", status));
+    const apifyToken = getApifyToken(req);
+    const provider = req.query.apifyToken ? "apify" : searchProvider;
+    const result = await search(query, (status) => sendEvent(res, "status", status), apifyToken, provider);
 
     sendEvent(res, "results", {
       query,

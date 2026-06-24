@@ -70,6 +70,11 @@
             <button type="submit">Google Search</button>
             <button id="lucky" type="button">I'm Feeling Lucky</button>
           </form>
+          <div class="api-key-row">
+            <button id="apiKeyButton" type="button">Set Apify API key</button>
+            <button id="clearApiKeyButton" type="button">Clear key</button>
+            <span id="apiKeyStatus">Using default search</span>
+          </div>
           <aside class="links">Advanced search</aside>
           <section id="status" class="status" aria-live="polite"></section>
           <section id="results" class="results" aria-live="polite"></section>
@@ -154,6 +159,7 @@
             <button type="button" data-start-action="about">Help and Support</button>
             <div class="start-divider"></div>
             <button type="button" data-start-action="settings">Control Panel</button>
+            <button type="button" data-start-action="api-key">Apify API Key</button>
             <button type="button" data-start-action="close">Run...</button>
           </div>
         </div>
@@ -171,6 +177,24 @@
         <button id="petToggle" class="task pet-toggle" type="button" aria-pressed="true">404 Pet: on</button>
         <span class="tray">Internet | 11:41 PM</span>
       </footer>
+
+      <dialog id="apiKeyDialog" class="api-key-dialog" aria-labelledby="apiKeyTitle">
+        <form method="dialog">
+          <header>
+            <strong id="apiKeyTitle">Apify API Key</strong>
+            <button id="apiKeyClose" value="cancel" type="submit">X</button>
+          </header>
+          <p>Paste an Apify token to use Apify for searches on this browser. It is saved only in this browser's local storage.</p>
+          <label>
+            API key
+            <input id="apiKeyInput" type="password" autocomplete="off" placeholder="apify_api_...">
+          </label>
+          <div class="api-key-actions">
+            <button id="apiKeySave" value="save" type="submit">Save</button>
+            <button value="cancel" type="submit">Cancel</button>
+          </div>
+        </form>
+      </dialog>
     </main>
     <script src="app.js"></script>
   </body>

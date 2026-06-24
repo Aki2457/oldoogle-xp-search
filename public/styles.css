@@ -427,6 +427,101 @@ button {
   padding-top: 1px;
 }
 
+.api-key-row {
+  width: min(530px, calc(100vw - 48px));
+  margin: 8px auto 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 6px;
+  color: #666;
+  font-size: 11px;
+}
+
+.api-key-row button,
+.api-key-actions button,
+.api-key-dialog header button {
+  height: 23px;
+  border: 1px solid #b5b5a2;
+  border-right-color: #777;
+  border-bottom-color: #777;
+  background: #e9e5d0;
+  color: #222;
+  font-size: 11px;
+}
+
+.api-key-row button:hover,
+.api-key-actions button:hover,
+.api-key-dialog header button:hover {
+  background: #f4f0da;
+}
+
+#apiKeyStatus.has-key {
+  color: #0e7b18;
+  font-weight: 700;
+}
+
+.api-key-dialog {
+  width: min(390px, calc(100vw - 28px));
+  padding: 0;
+  border: 1px solid #0642a9;
+  background: #ece9d8;
+  box-shadow: 4px 4px 0 rgba(0, 0, 0, .25);
+  font-size: 12px;
+}
+
+.api-key-dialog::backdrop {
+  background: rgba(0, 0, 0, .22);
+}
+
+.api-key-dialog header {
+  height: 25px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 4px 0 8px;
+  color: #fff;
+  background: linear-gradient(#3aa1ff, #0050c8);
+  text-shadow: 1px 1px #003681;
+}
+
+.api-key-dialog header button {
+  width: 22px;
+  height: 19px;
+  padding: 0;
+  color: #fff;
+  background: linear-gradient(#ff9b73, #dc330f);
+  border-color: #ffd1c0 #8a1e08 #8a1e08 #ffd1c0;
+}
+
+.api-key-dialog form > p {
+  margin: 12px 12px 8px;
+  line-height: 1.35;
+}
+
+.api-key-dialog label {
+  display: grid;
+  gap: 4px;
+  margin: 0 12px 12px;
+  font-weight: 700;
+}
+
+.api-key-dialog input {
+  height: 25px;
+  border: 1px solid #7f9db9;
+  box-shadow: inset 1px 1px 2px #b7b7b7;
+  font-size: 12px;
+  padding: 2px 5px;
+}
+
+.api-key-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 6px;
+  padding: 8px 12px 12px;
+}
+
 .links {
   position: absolute;
   left: calc(50% + 270px);
