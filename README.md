@@ -108,11 +108,28 @@ Optional `.env` values:
 PORT=3000
 SEARCH_PROVIDER=duckduckgo
 SEARCH_TIMEOUT_MS=5000
-APIFY_TOKEN=your_apify_token_here
+APIFY_TOKEN=apify_api_demo_replace_me
 APIFY_ACTOR_ID=apify/google-search-scraper
+OLDOODLE_PUBLIC_SITE=https://aki2457.github.io/oldoogle-xp-search/
+OLDOODLE_API_BASE=http://localhost:3000
+
+# Demo auto-reply/chat placeholders for future bot work.
+AUTOREPLY_ENABLED=false
+AUTOREPLY_MODE=demo
+AUTOREPLY_FROM_NAME=Oldoodle Codex
+AUTOREPLY_FROM_ADDRESS=oldoodle-codex@example.invalid
+AUTOREPLY_SUBJECT_PREFIX=Re:
+AUTOREPLY_TEXT=Hi! Oldoodle received your message. This is a demo auto-reply, not a real inbox bot yet.
+
+# Demo SMTP placeholders. Do not commit real values.
+SMTP_HOST=smtp.example.invalid
+SMTP_PORT=587
+SMTP_USER=oldoodle-demo@example.invalid
+SMTP_PASS=smtp_demo_replace_me
 ```
 
 Use `SEARCH_PROVIDER=apify` if you want Apify as the primary provider.
+The checked-in `.env.example` uses fake demo credentials only; keep real keys in a local `.env` or deployment secrets.
 
 ## Speed Testing
 
