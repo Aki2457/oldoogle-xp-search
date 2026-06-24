@@ -6,6 +6,7 @@
     "build:mac": "pkg . --targets node18-macos-x64 --output dist/Oldoodle-XP-macos-x64",
     "build:linux": "pkg . --targets node18-linux-x64 --output dist/Oldoodle-XP-linux-x64",
     "build:all": "npm run build:exe && npm run build:mac && npm run build:linux",
+    "discord:bot": "node scripts/discord-bot.js",
     "package:extensions": "powershell -ExecutionPolicy Bypass -File scripts/package-extensions.ps1",
     "download:chromium": "node scripts/download-chromium.js",
     "release:folder": "node scripts/create-release.js"
@@ -16,6 +17,7 @@
     ]
   },
   "dependencies": {
+    "discord.js": "^14.26.4",
     "dotenv": "^16.4.7",
     "express": "^4.21.2"
   },

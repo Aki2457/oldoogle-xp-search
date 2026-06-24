@@ -126,10 +126,33 @@ SMTP_HOST=smtp.example.invalid
 SMTP_PORT=587
 SMTP_USER=oldoodle-demo@example.invalid
 SMTP_PASS=smtp_demo_replace_me
+
+# Optional Discord development bot.
+DISCORD_BOT_TOKEN=discord_bot_token_demo_replace_me
+DISCORD_DEV_CHANNEL_ID=000000000000000000
+DISCORD_REPLY_PREFIX=!oldoodle
+DISCORD_STATUS_TEXT=developing Oldoodle
 ```
 
 Use `SEARCH_PROVIDER=apify` if you want Apify as the primary provider.
 The checked-in `.env.example` uses fake demo credentials only; keep real keys in a local `.env` or deployment secrets.
+
+## Discord Development Bot
+
+Oldoodle includes an optional Discord dev helper for app-development notes and lightweight auto-replies.
+
+1. Create an app at <https://discord.com/developers/applications>.
+2. Add a bot and copy its token into local `.env` as `DISCORD_BOT_TOKEN`.
+3. Enable the bot's `MESSAGE CONTENT INTENT` in the Discord Developer Portal.
+4. Invite the bot to your server with bot permissions to read and send messages.
+5. Copy the target channel ID into `DISCORD_DEV_CHANNEL_ID`.
+6. Run:
+
+```sh
+npm run discord:bot
+```
+
+Then mention the bot, DM it, or use `!oldoodle status`, `!oldoodle search`, or `!oldoodle deploy`.
 
 ## Speed Testing
 
