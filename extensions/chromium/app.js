@@ -25,9 +25,15 @@ const apiKeyStatus = document.querySelector("#apiKeyStatus");
 const apiKeyDialog = document.querySelector("#apiKeyDialog");
 const apiKeyInput = document.querySelector("#apiKeyInput");
 const apiKeySave = document.querySelector("#apiKeySave");
+const gameLibrary = document.querySelector("#gameLibrary");
+const gameStage = document.querySelector("#gameStage");
+const closeGames = document.querySelector("#closeGames");
+const gameButtons = document.querySelectorAll("[data-game]");
 
 let activeEvents;
 let petTimer;
+let gameTimer;
+let dinoTimer;
 if (localStorage.getItem("oldooleActualPetApplied") !== "true") {
   localStorage.setItem("oldoolePetEnabled", "true");
   localStorage.setItem("oldooleActualPetApplied", "true");
@@ -307,6 +313,7 @@ function runSearch(query) {
       nudgePet({ energy: -3, focus: -2, mood: "worried" });
       setPet("worried", "LOST", "connection closed");
     }
+    if (apiBase) openGameLibrary("dino");
     window.setTimeout(() => setSearchProgress("idle"), 1000);
     activeEvents?.close();
     activeEvents = null;
@@ -341,8 +348,179 @@ function runSampleSearch(query) {
   runSearch(query);
 }
 
+function launchExternal(url) {
+  window.location.href = url;
+}
+
+function clearGameTimers() {
+  window.clearInterval(gameTimer);
+  window.clearInterval(dinoTimer);
+  gameTimer = null;
+  dinoTimer = null;
+}
+
+function closeGameLibrary() {
+  clearGameTimers();
+  if (gameLibrary) gameLibrary.hidden = true;
+  if (gameStage) gameStage.innerHTML = "";
+  setStatus("Done");
+}
+
+function openGameLibrary(game = "oldoodle") {
+  if (!gameLibrary || !gameStage) return;
+  clearGameTimers();
+  resultsBox.innerHTML = "";
+  gameLibrary.hidden = false;
+  setStatus("Airplane mode: local games ready.");
+  setPet("happy", "GAME", "offline fun");
+  renderGame(game);
+  gameStage.focus();
+}
+
+function makeGameBits(count, text = "Oldoodle") {
+  return Array.from({ length: count }, (_, index) => {
+    const bit = document.createElement("button");
+    bit.type = "button";
+    bit.className = "game-bit";
+    bit.textContent = text[index % text.length];
+    bit.style.left = `${8 + Math.random() * 82}%`;
+    bit.style.top = `${10 + Math.random() * 70}%`;
+    bit.style.setProperty("--speed", `${1.8 + Math.random() * 2.4}s`);
+    return bit;
+  });
+}
+
+function renderFloatingGame(mode) {
+  const title = mode === "gravity" ? "Gravity" : mode === "anti-gravity" ? "Anti-Gravity" : "Space";
+  gameStage.innerHTML = `<div class="game-title">${title}</div>`;
+  const bits = makeGameBits(mode === "space" ? 12 : 18, "OLD");
+  bits.forEach((bit) => {
+    if (mode === "gravity") bit.classList.add("falls");
+    if (mode === "anti-gravity") bit.classList.add("rises");
+    if (mode === "space") {
+      bit.classList.add("draggable");
+      bit.draggable = true;
+      bit.addEventListener("dragstart", (event) => {
+        event.dataTransfer.setData("text/plain", String(bits.indexOf(bit)));
+      });
+    }
+    gameStage.append(bit);
+  });
+
+  if (mode === "space") {
+    gameStage.ondragover = (event) => event.preventDefault();
+    gameStage.ondrop = (event) => {
+      event.preventDefault();
+      const bit = bits[Number(event.dataTransfer.getData("text/plain"))];
+      if (!bit) return;
+      const rect = gameStage.getBoundingClientRect();
+      bit.style.left = `${clamp(((event.clientX - rect.left) / rect.width) * 100)}%`;
+      bit.style.top = `${clamp(((event.clientY - rect.top) / rect.height) * 100)}%`;
+    };
+  }
+}
+
+function renderOldoodleGame() {
+  gameStage.innerHTML = `
+    <div class="oldoodle-game">
+      <div class="oldoodle-game-logo">Oldooooooooooodle</div>
+      <input aria-label="Oldooooooooooodle search" value="how many o's is too many?">
+      <button type="button">I'm Feeling Ooooooold</button>
+      <p>Every search result is just this page, but older.</p>
+    </div>
+  `;
+  gameStage.querySelector("button").addEventListener("click", () => {
+    setStatus("Oldooooooooooodle found 999,999 nostalgic o's.");
+    setPet("happy", "OOOO", "too many o's");
+  });
+}
+
+function renderDinoGame() {
+  gameStage.innerHTML = `
+    <div class="dino-game" aria-label="Dino game">
+      <div id="dinoScore" class="dino-score">00000</div>
+      <div id="dino" class="dino">404</div>
+      <div id="cactus" class="cactus">|||</div>
+      <div class="ground"></div>
+    </div>
+    <p class="game-help">Click, tap, or press Space to jump.</p>
+  `;
+
+  const dino = gameStage.querySelector("#dino");
+  const cactus = gameStage.querySelector("#cactus");
+  const score = gameStage.querySelector("#dinoScore");
+  let jumping = false;
+  let points = 0;
+
+  const jump = () => {
+    if (jumping) return;
+    jumping = true;
+    dino.classList.add("jump");
+    window.setTimeout(() => {
+      dino.classList.remove("jump");
+      jumping = false;
+    }, 520);
+  };
+
+  gameStage.onclick = jump;
+  gameStage.onkeydown = (event) => {
+    if (event.code === "Space" || event.key === " ") {
+      event.preventDefault();
+      jump();
+    }
+  };
+
+  dinoTimer = window.setInterval(() => {
+    points += 1;
+    score.textContent = String(points).padStart(5, "0");
+    const dinoBox = dino.getBoundingClientRect();
+    const cactusBox = cactus.getBoundingClientRect();
+    const hit = !(dinoBox.right < cactusBox.left || cactusBox.right < dinoBox.left || dinoBox.bottom < cactusBox.top || cactusBox.bottom < dinoBox.top);
+    if (hit) {
+      score.textContent = "ERROR";
+      setPet("worried", "DINO", "jump next time");
+      clearGameTimers();
+    }
+  }, 80);
+}
+
+function renderGame(game) {
+  clearGameTimers();
+  gameButtons.forEach((button) => button.classList.toggle("is-active", button.dataset.game === game));
+  gameStage.onclick = null;
+  gameStage.onkeydown = null;
+  gameStage.ondragover = null;
+  gameStage.ondrop = null;
+
+  if (game === "oldoodle") renderOldoodleGame();
+  if (game === "gravity") renderFloatingGame("gravity");
+  if (game === "anti-gravity") renderFloatingGame("anti-gravity");
+  if (game === "space") renderFloatingGame("space");
+  if (game === "dino") renderDinoGame();
+}
+
 function handleStartAction(action) {
   closeStartMenu();
+
+  if (action === "google") {
+    launchExternal("https://www.google.com/");
+    return;
+  }
+
+  if (action === "duckduckgo") {
+    launchExternal("https://duckduckgo.com/");
+    return;
+  }
+
+  if (action === "chatgpt") {
+    launchExternal("https://openai.com/");
+    return;
+  }
+
+  if (action === "airplane") {
+    openGameLibrary("oldoodle");
+    return;
+  }
 
   if (action === "focus-search") {
     input.focus();
@@ -440,6 +618,12 @@ startMenu?.addEventListener("click", (event) => {
   if (!button) return;
   handleStartAction(button.dataset.startAction);
 });
+
+gameButtons.forEach((button) => {
+  button.addEventListener("click", () => renderGame(button.dataset.game));
+});
+
+closeGames?.addEventListener("click", closeGameLibrary);
 
 document.addEventListener("click", (event) => {
   if (!startMenu?.classList.contains("is-open")) return;

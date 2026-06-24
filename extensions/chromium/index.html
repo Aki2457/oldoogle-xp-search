@@ -81,6 +81,23 @@
             <span id="searchProgressFill"></span>
           </div>
           <section id="results" class="results" aria-live="polite"></section>
+          <section id="gameLibrary" class="game-library" aria-label="Airplane game library" hidden>
+            <header>
+              <div>
+                <strong>Airplane</strong>
+                <span>Offline games</span>
+              </div>
+              <button id="closeGames" type="button">X</button>
+            </header>
+            <nav class="game-tabs" aria-label="Games">
+              <button type="button" data-game="oldoodle">Oldooooooooooodle</button>
+              <button type="button" data-game="gravity">Gravity</button>
+              <button type="button" data-game="anti-gravity">Anti-Gravity</button>
+              <button type="button" data-game="space">Space</button>
+              <button type="button" data-game="dino">Dino game</button>
+            </nav>
+            <div id="gameStage" class="game-stage" tabindex="0"></div>
+          </section>
           <div class="oldoodle-footer">
             <span>Advertising Programs</span>
             <span>Business Solutions</span>
@@ -153,9 +170,14 @@
             <button class="start-item" type="button" data-start-action="sample-apify">Apify widgets</button>
             <button class="start-item" type="button" data-start-action="doodle-april">April Fools Doodle</button>
             <button class="start-item" type="button" data-start-action="doodle-random">Random Doodle</button>
+            <button class="start-item" type="button" data-start-action="airplane">Airplane</button>
             <button class="start-all" type="button" data-start-action="focus-search">All Programs <span>&gt;</span></button>
           </div>
           <div class="start-menu-right">
+            <button type="button" data-start-action="google">Google</button>
+            <button type="button" data-start-action="duckduckgo">DuckDuckGo</button>
+            <button type="button" data-start-action="chatgpt">ChatGPT (OpenAI)</button>
+            <div class="start-divider"></div>
             <button type="button" data-start-action="home">My Home Page</button>
             <button type="button" data-start-action="clear">Recent Searches</button>
             <button type="button" data-start-action="focus-search">Search</button>
