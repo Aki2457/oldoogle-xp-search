@@ -2,7 +2,7 @@
 
 ## Icon
 
-Oldoodle uses the **Vintage Phone Streamline Pixel** icon as its website and extension icon.
+Oldoodle uses Streamline Pixel icons for its website, extension, and attribution mark.
 
 Attribution:
 

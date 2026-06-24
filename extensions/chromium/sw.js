@@ -1,10 +1,11 @@
-const CACHE_VERSION = "oldoodle-shell-v1";
+const CACHE_VERSION = "oldoodle-shell-v2";
 const SHELL_ASSETS = [
   "/",
   "/index.html",
   "/styles.css",
   "/app.js",
   "/site-icon.svg",
+  "/attribution-mark.svg",
   "/oldoodle-logo.svg",
   "/made-possible.html"
 ];
