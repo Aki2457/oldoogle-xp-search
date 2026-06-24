@@ -881,6 +881,16 @@ petToggle?.addEventListener("click", () => {
 
 window.addEventListener("beforeunload", savePetState);
 
+if ("serviceWorker" in navigator && ["http:", "https:"].includes(location.protocol)) {
+  window.addEventListener("load", () => {
+    navigator.serviceWorker.register("/sw.js")
+      .then(() => setStatus("Oldoodle shell cached for offline use."))
+      .catch(() => {
+        // Cache setup is optional; the app still works without it.
+      });
+  });
+}
+
 applyPetEnabled();
 updatePetPanel();
 setDoodle(currentDoodle, false);
