@@ -36,6 +36,12 @@ function getApifyToken(req) {
   return supplied || token;
 }
 
+function getSearchProvider(req) {
+  const provider = String(req?.query?.provider || "").trim().toLowerCase();
+  if (["apify", "duckduckgo"].includes(provider)) return provider;
+  return req.query.apifyToken ? "apify" : searchProvider;
+}
+
 async function apify(pathname, options = {}, apifyToken = token) {
   if (!apifyToken) {
     throw new Error("APIFY_TOKEN is missing from .env");
@@ -235,7 +241,7 @@ app.get("/api/search.json", async (req, res) => {
 
   try {
     const apifyToken = getApifyToken(req);
-    const provider = req.query.apifyToken ? "apify" : searchProvider;
+    const provider = getSearchProvider(req);
     const result = await search(query, undefined, apifyToken, provider);
     res.json({
       query,
@@ -262,7 +268,7 @@ app.get("/api/search", async (req, res) => {
 
   try {
     const apifyToken = getApifyToken(req);
-    const provider = req.query.apifyToken ? "apify" : searchProvider;
+    const provider = getSearchProvider(req);
     const result = await search(query, (status) => sendEvent(res, "status", status), apifyToken, provider);
 
     sendEvent(res, "results", {

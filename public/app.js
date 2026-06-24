@@ -28,6 +28,12 @@ const apiKeyStatus = document.querySelector("#apiKeyStatus");
 const apiKeyDialog = document.querySelector("#apiKeyDialog");
 const apiKeyInput = document.querySelector("#apiKeyInput");
 const apiKeySave = document.querySelector("#apiKeySave");
+const searchProviderSelect = document.querySelector("#searchProviderSelect");
+const searchEndpointSelect = document.querySelector("#searchEndpointSelect");
+const searchEndpointInput = document.querySelector("#searchEndpointInput");
+const customEndpointRow = document.querySelector("#customEndpointRow");
+const apiManagerStatus = document.querySelector("#apiManagerStatus");
+const apiManagerTest = document.querySelector("#apiManagerTest");
 const gameLibrary = document.querySelector("#gameLibrary");
 const gameStage = document.querySelector("#gameStage");
 const closeGames = document.querySelector("#closeGames");
@@ -45,6 +51,9 @@ let petEnabled = localStorage.getItem("oldoolePetEnabled") !== "false";
 let petState = loadPetState();
 let currentDoodle = localStorage.getItem("oldoodleDoodle") || autoDoodle();
 let apifyApiKey = localStorage.getItem("oldoodleApifyApiKey") || "";
+let searchProviderSetting = localStorage.getItem("oldoodleSearchProvider") || "duckduckgo";
+let searchEndpointMode = localStorage.getItem("oldoodleSearchEndpointMode") || "auto";
+let customSearchEndpoint = localStorage.getItem("oldoodleSearchEndpoint") || "";
 const apiBase = ["chrome-extension:", "moz-extension:", "file:"].includes(location.protocol)
   ? "http://localhost:3000"
   : "";
@@ -155,19 +164,75 @@ function setStatus(message) {
 
 function updateApiKeyStatus() {
   if (!apiKeyStatus) return;
-  apiKeyStatus.textContent = apifyApiKey ? "Using Apify API key" : "Using default search";
+  const providerLabel = searchProviderSetting === "apify" ? "Apify" : "DuckDuckGo";
+  const endpointLabel = searchEndpointMode === "custom" && customSearchEndpoint ? "custom endpoint" : searchEndpointMode === "local" ? "localhost" : "current server";
+  apiKeyStatus.textContent = `${providerLabel} via ${endpointLabel}${apifyApiKey ? " with key" : ""}`;
   apiKeyStatus.classList.toggle("has-key", Boolean(apifyApiKey));
 }
 
 function openApiKeyDialog() {
   if (!apiKeyDialog || !apiKeyInput) return;
   apiKeyInput.value = apifyApiKey;
+  if (searchProviderSelect) searchProviderSelect.value = searchProviderSetting;
+  if (searchEndpointSelect) searchEndpointSelect.value = searchEndpointMode;
+  if (searchEndpointInput) searchEndpointInput.value = customSearchEndpoint;
+  updateEndpointRow();
+  if (apiManagerStatus) apiManagerStatus.textContent = "";
   if (typeof apiKeyDialog.showModal === "function") {
     apiKeyDialog.showModal();
   } else {
     const value = window.prompt("Apify API key", apifyApiKey);
     if (value !== null) saveApiKey(value);
   }
+}
+
+function updateEndpointRow() {
+  if (!customEndpointRow) return;
+  customEndpointRow.hidden = searchEndpointSelect?.value !== "custom";
+}
+
+function normalizeEndpoint(value) {
+  return String(value || "").trim().replace(/\/+$/, "");
+}
+
+function getConfiguredApiBase() {
+  if (searchEndpointMode === "local") return "http://localhost:3000";
+  if (searchEndpointMode === "custom" && customSearchEndpoint) return customSearchEndpoint;
+  return apiBase;
+}
+
+function saveApiSettings() {
+  searchProviderSetting = searchProviderSelect?.value || "duckduckgo";
+  searchEndpointMode = searchEndpointSelect?.value || "auto";
+  customSearchEndpoint = normalizeEndpoint(searchEndpointInput?.value || "");
+  apifyApiKey = String(apiKeyInput?.value || "").trim();
+
+  localStorage.setItem("oldoodleSearchProvider", searchProviderSetting);
+  localStorage.setItem("oldoodleSearchEndpointMode", searchEndpointMode);
+  if (customSearchEndpoint) localStorage.setItem("oldoodleSearchEndpoint", customSearchEndpoint);
+  else localStorage.removeItem("oldoodleSearchEndpoint");
+
+  if (apifyApiKey) localStorage.setItem("oldoodleApifyApiKey", apifyApiKey);
+  else localStorage.removeItem("oldoodleApifyApiKey");
+  localStorage.setItem("oldoodleApifyPromptSeen", "true");
+
+  updateApiKeyStatus();
+  setStatus("Search API settings saved.");
+  setPet("happy", "API", "search wired");
+}
+
+function resetApiSettings() {
+  apifyApiKey = "";
+  searchProviderSetting = "duckduckgo";
+  searchEndpointMode = "auto";
+  customSearchEndpoint = "";
+  localStorage.removeItem("oldoodleApifyApiKey");
+  localStorage.removeItem("oldoodleSearchProvider");
+  localStorage.removeItem("oldoodleSearchEndpointMode");
+  localStorage.removeItem("oldoodleSearchEndpoint");
+  updateApiKeyStatus();
+  setStatus("Search API settings reset.");
+  setPet("idle", "404", "default search");
 }
 
 function saveApiKey(value) {
@@ -183,6 +248,38 @@ function saveApiKey(value) {
     setPet("idle", "404", "default search");
   }
   updateApiKeyStatus();
+}
+
+async function testApiSettings() {
+  if (!apiManagerStatus) return;
+  const previousProvider = searchProviderSetting;
+  const previousEndpointMode = searchEndpointMode;
+  const previousEndpoint = customSearchEndpoint;
+  const previousKey = apifyApiKey;
+
+  searchProviderSetting = searchProviderSelect?.value || "duckduckgo";
+  searchEndpointMode = searchEndpointSelect?.value || "auto";
+  customSearchEndpoint = normalizeEndpoint(searchEndpointInput?.value || "");
+  apifyApiKey = String(apiKeyInput?.value || "").trim();
+
+  apiManagerStatus.textContent = "Testing search API...";
+  try {
+    const url = new URL(`${getConfiguredApiBase()}/api/search.json`, location.href);
+    url.searchParams.set("q", "oldoodle test");
+    url.searchParams.set("provider", searchProviderSetting);
+    if (searchProviderSetting === "apify" && apifyApiKey) url.searchParams.set("apifyToken", apifyApiKey);
+    const response = await fetch(url);
+    const data = await response.json();
+    if (!response.ok) throw new Error(data.error || `HTTP ${response.status}`);
+    apiManagerStatus.textContent = `OK: ${data.count} ${data.provider} results.`;
+  } catch (error) {
+    apiManagerStatus.textContent = `Failed: ${error.message}`;
+  } finally {
+    searchProviderSetting = previousProvider;
+    searchEndpointMode = previousEndpointMode;
+    customSearchEndpoint = previousEndpoint;
+    apifyApiKey = previousKey;
+  }
 }
 
 function autoDoodle() {
@@ -310,9 +407,10 @@ function runSearch(query) {
   nudgePet({ energy: -3, focus: 4, mood: "searching" });
   setPet("searching", "PING", `scanning "${query}"`, 999999);
 
-  const searchUrl = new URL(`${apiBase}/api/search`, location.href);
+  const searchUrl = new URL(`${getConfiguredApiBase()}/api/search`, location.href);
   searchUrl.searchParams.set("q", query);
-  if (apifyApiKey) searchUrl.searchParams.set("apifyToken", apifyApiKey);
+  searchUrl.searchParams.set("provider", searchProviderSetting);
+  if (searchProviderSetting === "apify" && apifyApiKey) searchUrl.searchParams.set("apifyToken", apifyApiKey);
 
   activeEvents = new EventSource(searchUrl.toString());
   activeEvents.addEventListener("status", (event) => {
@@ -715,19 +813,23 @@ doodleButtons.forEach((button) => {
 
 apiKeyButton?.addEventListener("click", openApiKeyDialog);
 
-clearApiKeyButton?.addEventListener("click", () => saveApiKey(""));
+clearApiKeyButton?.addEventListener("click", resetApiSettings);
+
+searchEndpointSelect?.addEventListener("change", updateEndpointRow);
 
 apiKeyDialog?.addEventListener("close", () => {
   if (apiKeyDialog.returnValue === "save") {
-    saveApiKey(apiKeyInput?.value || "");
+    saveApiSettings();
   }
 });
 
 apiKeySave?.addEventListener("click", (event) => {
   event.preventDefault();
-  saveApiKey(apiKeyInput?.value || "");
+  saveApiSettings();
   apiKeyDialog?.close();
 });
+
+apiManagerTest?.addEventListener("click", testApiSettings);
 
 petSprite?.addEventListener("click", () => {
   const quips = [

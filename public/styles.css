@@ -502,6 +502,21 @@ button {
   padding: 2px 5px;
 }
 
+.api-key-dialog select {
+  height: 25px;
+  border: 1px solid #7f9db9;
+  background: #fff;
+  font-size: 12px;
+  padding: 2px 5px;
+}
+
+.api-manager-status {
+  min-height: 16px;
+  margin: 0 12px 8px;
+  color: #355c9f;
+  font-size: 12px;
+}
+
 .api-key-actions {
   display: flex;
   justify-content: flex-end;

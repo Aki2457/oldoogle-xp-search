@@ -71,8 +71,8 @@
             <button id="lucky" type="button">I'm Feeling Lucky</button>
           </form>
           <div class="api-key-row">
-            <button id="apiKeyButton" type="button">Set Apify API key</button>
-            <button id="clearApiKeyButton" type="button">Clear key</button>
+            <button id="apiKeyButton" type="button">Search API Manager</button>
+            <button id="clearApiKeyButton" type="button">Reset API</button>
             <span id="apiKeyStatus">Using default search</span>
           </div>
           <aside class="links">Advanced search</aside>
@@ -184,7 +184,7 @@
             <button type="button" data-start-action="about">Help and Support</button>
             <div class="start-divider"></div>
             <button type="button" data-start-action="settings">Control Panel</button>
-            <button type="button" data-start-action="api-key">Apify API Key</button>
+            <button type="button" data-start-action="api-key">Search API Manager</button>
             <button type="button" data-start-action="close">Run...</button>
           </div>
         </div>
@@ -209,18 +209,39 @@
         <span class="tray">Internet | 11:41 PM</span>
       </footer>
 
-      <dialog id="apiKeyDialog" class="api-key-dialog" aria-labelledby="apiKeyTitle">
+      <dialog id="apiKeyDialog" class="api-key-dialog search-api-dialog" aria-labelledby="apiKeyTitle">
         <form method="dialog">
           <header>
-            <strong id="apiKeyTitle">Apify API Key</strong>
+            <strong id="apiKeyTitle">Search API Manager</strong>
             <button id="apiKeyClose" value="cancel" type="submit">X</button>
           </header>
-          <p>Paste an Apify token to use Apify for searches on this browser. It is saved only in this browser's local storage.</p>
+          <p>Choose the search backend Oldoodle should use. Secrets are saved only in this browser's local storage.</p>
           <label>
-            API key
+            Provider
+            <select id="searchProviderSelect">
+              <option value="duckduckgo">DuckDuckGo fast index</option>
+              <option value="apify">Apify Google Search actor</option>
+            </select>
+          </label>
+          <label>
+            Endpoint
+            <select id="searchEndpointSelect">
+              <option value="auto">Auto / current server</option>
+              <option value="local">Localhost :3000</option>
+              <option value="custom">Custom endpoint</option>
+            </select>
+          </label>
+          <label id="customEndpointRow">
+            Custom endpoint
+            <input id="searchEndpointInput" type="url" autocomplete="off" placeholder="https://example.com">
+          </label>
+          <label>
+            Apify API key
             <input id="apiKeyInput" type="password" autocomplete="off" placeholder="apify_api_...">
           </label>
+          <p id="apiManagerStatus" class="api-manager-status" aria-live="polite"></p>
           <div class="api-key-actions">
+            <button id="apiManagerTest" value="test" type="button">Test</button>
             <button id="apiKeySave" value="save" type="submit">Save</button>
             <button value="cancel" type="submit">Cancel</button>
           </div>
