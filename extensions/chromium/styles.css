@@ -845,7 +845,7 @@ button {
   z-index: 20;
   --pet-scale: .86;
   width: 244px;
-  min-height: 136px;
+  min-height: 176px;
   image-rendering: pixelated;
 }
 
@@ -874,10 +874,11 @@ button {
 
 .pet-bubble {
   position: absolute;
-  right: 62px;
-  bottom: 58px;
-  min-width: 108px;
-  max-width: 178px;
+  right: 6px;
+  bottom: 148px;
+  z-index: 3;
+  min-width: 132px;
+  max-width: 220px;
   padding: 6px 8px;
   border: 1px solid #4f5561;
   border-radius: 3px;
@@ -892,9 +893,22 @@ button {
   pointer-events: none;
 }
 
+.pet-bubble::after {
+  content: "";
+  position: absolute;
+  right: 28px;
+  bottom: -7px;
+  width: 10px;
+  height: 10px;
+  border-right: 1px solid #4f5561;
+  border-bottom: 1px solid #4f5561;
+  background: #141820;
+  transform: rotate(45deg);
+}
+
 .codex-pet.is-speaking .pet-bubble,
-.pet-sprite:hover .pet-bubble,
-.pet-sprite:focus-visible .pet-bubble {
+.codex-pet:hover .pet-bubble,
+.codex-pet:focus-within .pet-bubble {
   opacity: 1;
   transform: translateY(0);
 }
@@ -1186,8 +1200,8 @@ button {
   }
 
   .pet-bubble {
-    right: 50px;
-    bottom: 62px;
+    right: 4px;
+    bottom: 118px;
     max-width: 138px;
   }
 }
