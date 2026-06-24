@@ -62,20 +62,29 @@
               <button type="button" data-doodle="random">Random</button>
             </div>
           </div>
-          <h1 class="logo">
-            <img src="oldoodle-logo.svg" width="560" height="130" alt="Oldoodle">
-          </h1>
-          <form id="searchForm" class="search-box">
-            <input id="query" name="q" autocomplete="off" autofocus>
-            <button type="submit">Oldoodle Search</button>
-            <button id="lucky" type="button">I'm Feeling Lucky</button>
-          </form>
-          <div class="api-key-row">
-            <button id="apiKeyButton" type="button">Search API Manager</button>
-            <button id="clearApiKeyButton" type="button">Reset API</button>
-            <span id="apiKeyStatus">Using default search</span>
-          </div>
-          <aside class="links">Advanced search</aside>
+          <section class="search-home" aria-label="Oldoodle search">
+            <h1 class="logo">
+              <img src="oldoodle-logo.svg" width="560" height="130" alt="Oldoodle">
+            </h1>
+            <div class="search-layout">
+              <form id="searchForm" class="search-box">
+                <input id="query" name="q" autocomplete="off" autofocus>
+                <div class="search-actions">
+                  <button type="submit">Oldoodle Search</button>
+                  <button id="lucky" type="button">I'm Feeling Lucky</button>
+                </div>
+              </form>
+              <aside class="links">
+                <a href="#query">Advanced search</a>
+                <a href="#query">Language tools</a>
+              </aside>
+            </div>
+            <div class="api-key-row">
+              <button id="apiKeyButton" type="button">Search API Manager</button>
+              <button id="clearApiKeyButton" type="button">Reset API</button>
+              <span id="apiKeyStatus">Using default search</span>
+            </div>
+          </section>
           <section id="status" class="status" aria-live="polite"></section>
           <div id="searchProgress" class="search-progress" aria-hidden="true">
             <span id="searchProgressFill"></span>
