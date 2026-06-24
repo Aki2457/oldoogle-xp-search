@@ -17,6 +17,9 @@ const petBond = document.querySelector("#petBond");
 const browserStatusText = document.querySelector("#browserStatusText");
 const startButton = document.querySelector("#startButton");
 const startMenu = document.querySelector("#startMenu");
+const startSearchForm = document.querySelector("#startSearchForm");
+const startSearchInput = document.querySelector("#startSearchInput");
+const startSearchEmpty = document.querySelector("#startSearchEmpty");
 const doodleBadge = document.querySelector("#doodleBadge");
 const doodleButtons = document.querySelectorAll("[data-doodle]");
 const apiKeyButton = document.querySelector("#apiKeyButton");
@@ -225,10 +228,46 @@ function setStartMenu(open) {
   startMenu.setAttribute("aria-hidden", String(!open));
   startButton.classList.toggle("is-active", open);
   startButton.setAttribute("aria-expanded", String(open));
+  if (open) {
+    filterStartMenu(startSearchInput?.value || "");
+    window.setTimeout(() => startSearchInput?.focus(), 40);
+  }
 }
 
 function closeStartMenu() {
   setStartMenu(false);
+}
+
+function filterStartMenu(query) {
+  if (!startMenu) return [];
+  const clean = query.trim().toLowerCase();
+  const items = [...startMenu.querySelectorAll("[data-start-action]")].filter((button) => !button.closest(".start-menu-footer"));
+  const matches = [];
+
+  items.forEach((button) => {
+    const haystack = `${button.textContent} ${button.dataset.startAction}`.toLowerCase();
+    const matched = !clean || haystack.includes(clean);
+    button.hidden = !matched;
+    if (matched) matches.push(button);
+  });
+
+  startMenu.classList.toggle("has-filter", Boolean(clean));
+  if (startSearchEmpty) startSearchEmpty.hidden = !clean || matches.length > 0;
+  return matches;
+}
+
+function runStartSearch(query) {
+  const matches = filterStartMenu(query);
+  const first = matches.find((button) => button.dataset.startAction !== "close");
+  if (first) {
+    handleStartAction(first.dataset.startAction);
+    return;
+  }
+
+  closeStartMenu();
+  if (query.trim()) {
+    runSampleSearch(query.trim());
+  }
 }
 
 function renderResults(items) {
@@ -634,6 +673,21 @@ startMenu?.addEventListener("click", (event) => {
   const button = event.target.closest("[data-start-action]");
   if (!button) return;
   handleStartAction(button.dataset.startAction);
+});
+
+startSearchInput?.addEventListener("input", () => {
+  filterStartMenu(startSearchInput.value);
+});
+
+startSearchInput?.addEventListener("keydown", (event) => {
+  if (event.key !== "Enter") return;
+  event.preventDefault();
+  runStartSearch(startSearchInput.value);
+});
+
+startSearchForm?.addEventListener("submit", (event) => {
+  event.preventDefault();
+  runStartSearch(startSearchInput?.value || "");
 });
 
 gameButtons.forEach((button) => {

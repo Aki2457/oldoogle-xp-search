@@ -188,6 +188,12 @@
             <button type="button" data-start-action="close">Run...</button>
           </div>
         </div>
+        <form id="startSearchForm" class="start-search" role="search">
+          <label for="startSearchInput">Search</label>
+          <input id="startSearchInput" type="search" autocomplete="off" placeholder="Type an app or game">
+          <button type="submit">Go</button>
+        </form>
+        <p id="startSearchEmpty" class="start-search-empty" hidden>No Start menu matches. Press Go to search Oldoodle.</p>
         <div class="start-menu-footer">
           <button type="button" data-start-action="logoff">Log Off</button>
           <button type="button" data-start-action="shutdown">Turn Off Computer</button>

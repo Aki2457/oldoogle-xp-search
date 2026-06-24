@@ -982,6 +982,51 @@ button {
   border-right: 2px solid #0846a8;
 }
 
+.start-search {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 6px;
+  padding: 7px 8px;
+  border-left: 2px solid #5aa1ff;
+  border-right: 2px solid #0846a8;
+  border-top: 1px solid #9bbef2;
+  background: #c7dcfb;
+  font-size: 12px;
+}
+
+.start-search label {
+  font-weight: 700;
+  color: #174f9f;
+}
+
+.start-search input {
+  min-width: 0;
+  height: 24px;
+  border: 1px solid #7f9db9;
+  box-shadow: inset 1px 1px 2px #9d9d9d;
+  padding: 2px 5px;
+  font: inherit;
+}
+
+.start-search button {
+  height: 24px;
+  border: 1px solid #8a8a8a;
+  background: linear-gradient(#fff, #dcdad1);
+  box-shadow: inset 1px 1px #fff;
+  font: inherit;
+}
+
+.start-search-empty {
+  margin: 0;
+  padding: 5px 10px 7px;
+  border-left: 2px solid #5aa1ff;
+  border-right: 2px solid #0846a8;
+  background: #fff9d7;
+  color: #5b4a00;
+  font-size: 11px;
+}
+
 .start-menu-left,
 .start-menu-right {
   padding: 8px;
@@ -1073,6 +1118,10 @@ button {
   gap: 8px;
   padding: 6px 10px;
   background: linear-gradient(#1b72df, #0746b0);
+}
+
+.start-menu.has-filter .start-menu-footer {
+  display: none;
 }
 
 .start-menu-footer button {
