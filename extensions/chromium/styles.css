@@ -763,6 +763,10 @@ button {
   overflow: hidden;
 }
 
+.dino-game.is-crashed {
+  background: linear-gradient(#fff3f0, #f7f7f7);
+}
+
 .dino-score {
   position: absolute;
   right: 12px;
@@ -793,9 +797,36 @@ button {
   position: absolute;
   right: -42px;
   bottom: 26px;
-  color: #2f6a2f;
-  font-weight: 700;
+  width: 26px;
+  height: 42px;
   animation: cactus-run 1.45s linear infinite;
+}
+
+.cactus.is-stopped {
+  animation-play-state: paused;
+}
+
+.cactus span {
+  position: absolute;
+  bottom: 0;
+  width: 8px;
+  background: #2f7f32;
+  border: 1px solid #1f5d22;
+}
+
+.cactus span:nth-child(1) {
+  left: 9px;
+  height: 40px;
+}
+
+.cactus span:nth-child(2) {
+  left: 0;
+  height: 24px;
+}
+
+.cactus span:nth-child(3) {
+  right: 0;
+  height: 31px;
 }
 
 .ground {

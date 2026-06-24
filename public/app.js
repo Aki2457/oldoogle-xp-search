@@ -440,26 +440,47 @@ function renderDinoGame() {
     <div class="dino-game" aria-label="Dino game">
       <div id="dinoScore" class="dino-score">00000</div>
       <div id="dino" class="dino">404</div>
-      <div id="cactus" class="cactus">|||</div>
+      <div id="cactus" class="cactus" aria-label="cactus"><span></span><span></span><span></span></div>
       <div class="ground"></div>
     </div>
     <p class="game-help">Click, tap, or press Space to jump.</p>
   `;
 
+  const dinoGame = gameStage.querySelector(".dino-game");
   const dino = gameStage.querySelector("#dino");
   const cactus = gameStage.querySelector("#cactus");
   const score = gameStage.querySelector("#dinoScore");
   let jumping = false;
+  let gameOver = false;
   let points = 0;
 
   const jump = () => {
-    if (jumping) return;
+    if (jumping || gameOver) return;
     jumping = true;
     dino.classList.add("jump");
     window.setTimeout(() => {
       dino.classList.remove("jump");
       jumping = false;
     }, 520);
+  };
+
+  const hitbox = (box, insetX, insetY) => ({
+    left: box.left + insetX,
+    right: box.right - insetX,
+    top: box.top + insetY,
+    bottom: box.bottom - insetY
+  });
+
+  const overlaps = (a, b) => !(a.right < b.left || b.right < a.left || a.bottom < b.top || b.bottom < a.top);
+
+  const endGame = () => {
+    gameOver = true;
+    score.textContent = "CRASH";
+    dinoGame.classList.add("is-crashed");
+    cactus.classList.add("is-stopped");
+    setStatus("Dino game over: cactus collision.");
+    setPet("worried", "DINO", "cactus got us");
+    clearGameTimers();
   };
 
   gameStage.onclick = jump;
@@ -471,16 +492,12 @@ function renderDinoGame() {
   };
 
   dinoTimer = window.setInterval(() => {
+    if (gameOver) return;
     points += 1;
     score.textContent = String(points).padStart(5, "0");
-    const dinoBox = dino.getBoundingClientRect();
-    const cactusBox = cactus.getBoundingClientRect();
-    const hit = !(dinoBox.right < cactusBox.left || cactusBox.right < dinoBox.left || dinoBox.bottom < cactusBox.top || cactusBox.bottom < dinoBox.top);
-    if (hit) {
-      score.textContent = "ERROR";
-      setPet("worried", "DINO", "jump next time");
-      clearGameTimers();
-    }
+    const dinoBox = hitbox(dino.getBoundingClientRect(), 6, 4);
+    const cactusBox = hitbox(cactus.getBoundingClientRect(), 2, 2);
+    if (overlaps(dinoBox, cactusBox)) endGame();
   }, 80);
 }
 
