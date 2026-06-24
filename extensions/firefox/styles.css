@@ -661,7 +661,7 @@ button {
   height: 32px;
   padding: 3px;
   border: 1px solid rgba(255, 255, 255, .7);
-  background: #fff;
+  background: linear-gradient(#4c9dff, #0a58c8);
   image-rendering: pixelated;
 }
 
@@ -1111,6 +1111,11 @@ button {
   width: 24px;
   height: 24px;
   image-rendering: pixelated;
+}
+
+.start-icon.image-icon {
+  background: linear-gradient(#4c9dff, #0a58c8);
+  border-color: #0846a8;
 }
 
 .start-divider {
