@@ -35,7 +35,7 @@ docker run -p 8080:8080 ghcr.io/aki2457/oldoodle-search-engine:latest
 Open `speed-test/index.html` in a browser and point it at any deployed Oldoodle search endpoint, for example:
 
 ```text
-http://43.133.207.10:30566
+http://localhost:3000
 ```
 
 It tests `/api/search.json`, records average/best latency, and shows a sample payload.

@@ -412,7 +412,7 @@ function makeSearchFallbackItems(query) {
     {
       title: `Google results for "${query}"`,
       url: `https://www.google.com/search?q=${encoded}`,
-      description: "Use this while the Zeabur API server is waking up or unavailable.",
+      description: "Use this while the hosted API server is waking up or unavailable.",
       type: "fallback"
     },
     {

@@ -3,7 +3,7 @@
 The hosted API is:
 
 ```text
-http://43.133.207.10:30566
+http://localhost:3000
 ```
 
 ## Health
@@ -15,7 +15,7 @@ GET /api/health
 Example:
 
 ```text
-http://43.133.207.10:30566/api/health
+http://localhost:3000/api/health
 ```
 
 ## JSON Search
@@ -27,7 +27,7 @@ GET /api/search.json?q=windows+xp
 Example:
 
 ```text
-http://43.133.207.10:30566/api/search.json?q=old%20google
+http://localhost:3000/api/search.json?q=old%20google
 ```
 
 ## Live Search Stream

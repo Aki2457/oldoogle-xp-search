@@ -32,11 +32,11 @@ function oldoodleReply(messageText) {
   const text = messageText.toLowerCase();
 
   if (text.includes("status")) {
-    return `Oldoodle dev desk: app is wired for XP search, GitHub Pages fallback search, and a Zeabur Node API attempt. Site: ${publicSite}`;
+    return `Oldoodle dev desk: app is wired for XP search, GitHub Pages fallback search, and a hosted Node API attempt. Site: ${publicSite}`;
   }
 
   if (text.includes("search")) {
-    return "Search notes: localhost/Zeabur can use live `/api/search`; GitHub Pages falls back to DuckDuckGo, Google, and Internet Archive links.";
+    return "Search notes: localhost/hosted API can use live `/api/search`; GitHub Pages falls back to DuckDuckGo, Google, and Internet Archive links.";
   }
 
   if (text.includes("deploy") || text.includes("github")) {

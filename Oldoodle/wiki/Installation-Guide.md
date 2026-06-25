@@ -19,7 +19,7 @@ https://aki2457.github.io/speed-test/
 The default endpoint is:
 
 ```text
-http://43.133.207.10:30566
+http://localhost:3000
 ```
 
 ## Download The Release

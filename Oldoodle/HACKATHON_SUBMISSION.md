@@ -15,7 +15,7 @@
 
 - Public website: https://aki2457.github.io/
 - Speed test: https://aki2457.github.io/speed-test/
-- Search API: http://43.133.207.10:30566/api/health
+- Search API: http://localhost:3000/api/health
 - Public source repo: https://github.com/Aki2457/oldoodle-search-engine
 
 ## What Was Built
@@ -42,7 +42,7 @@ The project was built through an iterative human-AI workflow:
 
 - Human decisions: visual direction, nostalgia theme, project scope, release requirements, and final approval of what should be shipped.
 - AI-assisted implementation: code edits, packaging scripts, extension manifests, Docker setup, release folder generation, documentation drafts, and test commands.
-- Human review moments: the user repeatedly redirected the style and feature set, including XP visuals, Start menu behavior, Doodles, widgets, release packaging, GitHub Pages, and Zeabur deployment.
+- Human review moments: the user repeatedly redirected the style and feature set, including XP visuals, Start menu behavior, Doodles, widgets, release packaging, GitHub Pages, and hosted API deployment.
 - Public evidence: commit history and this submission note in the GitHub repository.
 
 Relevant public repo sections:

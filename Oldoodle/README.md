@@ -6,7 +6,6 @@ Oldoodle XP is a Windows XP / Internet Explorer styled search app with live resu
 
 - GitHub Pages home: <https://aki2457.github.io/>
 - Speed test website: <https://aki2457.github.io/speed-test/>
-- Tokyo Zeabur search API: <http://43.133.207.10:30566>
 - Public deploy/source repo: <https://github.com/Aki2457/oldoodle-search-engine>
 - Main private/source repo: <https://github.com/Aki2457/oldoogle-xp-search>
 - Latest release zip: <https://github.com/Aki2457/oldoogle-xp-search/releases/download/v1.0.1/Oldoodle_Release.zip>
@@ -168,7 +167,7 @@ https://aki2457.github.io/speed-test/
 Default endpoint:
 
 ```text
-http://43.133.207.10:30566
+http://localhost:3000
 ```
 
 The speed tester calls `/api/search.json`, records every run, shows average/best latency, result count, provider, and a sample payload.
@@ -219,22 +218,9 @@ ghcr.io/aki2457/oldoodle-search-engine:latest
 
 It runs on pushes to `main` when Docker/server files change, and can also be run manually from GitHub Actions.
 
-## Zeabur Deployment
+## Hosted API Deployment
 
-The Tokyo deployment currently uses:
-
-```text
-http://43.133.207.10:30566
-```
-
-Useful checks:
-
-```sh
-curl http://43.133.207.10:30566/api/health
-curl "http://43.133.207.10:30566/api/search.json?q=old%20google"
-```
-
-The API sets CORS headers, so the GitHub Pages speed-test site can call it from the browser.
+Oldoodle can run its Node search API on any host that supports Docker or Node.js. The API sets CORS headers, so GitHub Pages and extension builds can call a configured backend from the browser.
 
 ## Browser Extensions
 

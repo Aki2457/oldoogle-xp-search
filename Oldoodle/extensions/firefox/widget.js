@@ -1,4 +1,4 @@
-const defaultEndpoint = "http://43.133.207.10:30566";
+const defaultEndpoint = "http://localhost:3000";
 const api = browser;
 const tabs = document.querySelectorAll("[data-tab]");
 const panes = document.querySelectorAll("[data-pane]");

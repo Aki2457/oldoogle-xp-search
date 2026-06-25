@@ -16,7 +16,6 @@
   "host_permissions": [
     "http://localhost:3000/*",
     "http://127.0.0.1:3000/*",
-    "http://43.133.207.10:30566/*",
     "https://api.qrserver.com/*"
   ],
   "permissions": [

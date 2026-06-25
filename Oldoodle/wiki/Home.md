@@ -16,7 +16,7 @@ That timestamp marks the end of the creation phase and the beginning of Oldoodle
 
 - Public website: https://aki2457.github.io/
 - Speed test: https://aki2457.github.io/speed-test/
-- Search API health: http://43.133.207.10:30566/api/health
+- Search API health: http://localhost:3000/api/health
 - Public source repo: https://github.com/Aki2457/oldoodle-search-engine
 - Release v1.0.3: https://github.com/Aki2457/oldoodle-search-engine/releases/tag/v1.0.3
 
