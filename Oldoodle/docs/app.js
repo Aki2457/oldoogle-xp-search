@@ -18,12 +18,12 @@ function renderDemo(query) {
   const items = [
     {
       title: `Oldoodle demo search: ${clean}`,
-      url: "github.com/Aki2457/oldoogle-xp-search",
+      url: "github.com/Aki2457/oldoodle",
       text: "The hosted GitHub Pages app is a static demo and launcher. Live Apify widgets run in the local app."
     },
     {
       title: "Download Oldoodle XP release",
-      url: "github.com/Aki2457/oldoogle-xp-search/releases/download/v1.0.1/Oldoodle_Release.zip",
+      url: "github.com/Aki2457/oldoodle/releases/download/v1.0.1/Oldoodle_Release.zip",
       text: "Get the Oldoodle Chrome ZIP, Oldoodle Firefox XPI, torrent metadata, and install guides."
     },
     {
@@ -48,7 +48,7 @@ form.addEventListener("submit", (event) => {
 });
 
 lucky.addEventListener("click", () => {
-  window.location.href = "https://github.com/Aki2457/oldoogle-xp-search/releases/download/v1.0.1/Oldoodle_Release.zip";
+  window.location.href = "https://github.com/Aki2457/oldoodle/releases/download/v1.0.1/Oldoodle_Release.zip";
 });
 
 setDoodle(localStorage.getItem("oldoodlePagesDoodle") || "classic");

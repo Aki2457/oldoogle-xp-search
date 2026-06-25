@@ -4,12 +4,12 @@ Oldoodle XP is a Windows XP / Internet Explorer styled search app with live resu
 
 ## Live Links
 
-- GitHub Pages home: <https://aki2457.github.io/>
-- Speed test website: <https://aki2457.github.io/speed-test/>
-- Public deploy/source repo: <https://github.com/Aki2457/oldoodle-search-engine>
-- Main private/source repo: <https://github.com/Aki2457/oldoogle-xp-search>
-- Latest release zip: <https://github.com/Aki2457/oldoogle-xp-search/releases/download/v1.0.1/Oldoodle_Release.zip>
-- Public wiki contents: <https://github.com/Aki2457/oldoodle-search-engine/tree/main/wiki>
+- GitHub Pages home: <https://[I have forgot my Github Username].github.io/oldoodle/>
+- Speed test website: <https://[I have forgot my Github Username].github.io/oldoodle/speed-test/>
+- Public deploy/source repo: <https://github.com/Aki2457/oldoodle>
+- Main private/source repo: <https://github.com/Aki2457/oldoodle>
+- Latest release zip: <https://github.com/Aki2457/oldoodle/releases/download/v1.0.1/Oldoodle_Release.zip>
+- Public wiki contents: <https://github.com/Aki2457/oldoodle/tree/main/wiki>
 
 ## What It Includes
 
@@ -109,7 +109,7 @@ SEARCH_PROVIDER=duckduckgo
 SEARCH_TIMEOUT_MS=5000
 APIFY_TOKEN=apify_api_demo_replace_me
 APIFY_ACTOR_ID=apify/google-search-scraper
-OLDOODLE_PUBLIC_SITE=https://aki2457.github.io/oldoogle-xp-search/
+OLDOODLE_PUBLIC_SITE=https://[I have forgot my Github Username].github.io/oldoodle/
 OLDOODLE_API_BASE=http://localhost:3000
 
 # Demo auto-reply/chat placeholders for future bot work.
@@ -161,7 +161,7 @@ Then mention the bot, DM it, or use `!oldoodle status`, `!oldoodle search`, or `
 Hosted tester:
 
 ```text
-https://aki2457.github.io/speed-test/
+https://[I have forgot my Github Username].github.io/oldoodle/speed-test/
 ```
 
 Default endpoint:
@@ -197,7 +197,7 @@ http://localhost:8080/api/search?q=windows+xp
 Run the GitHub Container Registry image:
 
 ```sh
-docker run -p 8080:8080 ghcr.io/aki2457/oldoodle-search-engine:latest
+docker run -p 8080:8080 ghcr.io/aki2457/oldoodle:latest
 ```
 
 The Docker image listens on port `8080`.
@@ -213,7 +213,7 @@ The workflow at:
 builds and publishes:
 
 ```text
-ghcr.io/aki2457/oldoodle-search-engine:latest
+ghcr.io/aki2457/oldoodle:latest
 ```
 
 It runs on pushes to `main` when Docker/server files change, and can also be run manually from GitHub Actions.
@@ -314,19 +314,19 @@ The torrent intentionally excludes the `Oldoodle_Torrent/` folder itself because
 The public GitHub Pages repo is:
 
 ```text
-https://github.com/Aki2457/Aki2457.github.io
+https://github.com/Aki2457/oldoodle
 ```
 
 The root site serves the Oldoodle XP mini-app:
 
 ```text
-https://aki2457.github.io/
+https://[I have forgot my Github Username].github.io/oldoodle/
 ```
 
 The speed tester is served at:
 
 ```text
-https://aki2457.github.io/speed-test/
+https://[I have forgot my Github Username].github.io/oldoodle/speed-test/
 ```
 
 ## Useful Commands

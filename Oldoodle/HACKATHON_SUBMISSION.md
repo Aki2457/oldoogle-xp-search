@@ -13,10 +13,10 @@
 
 ## Demo Links
 
-- Public website: https://aki2457.github.io/
-- Speed test: https://aki2457.github.io/speed-test/
+- Public website: https://[I have forgot my Github Username].github.io/oldoodle/
+- Speed test: https://[I have forgot my Github Username].github.io/oldoodle/speed-test/
 - Search API: http://localhost:3000/api/health
-- Public source repo: https://github.com/Aki2457/oldoodle-search-engine
+- Public source repo: https://github.com/Aki2457/oldoodle
 
 ## What Was Built
 

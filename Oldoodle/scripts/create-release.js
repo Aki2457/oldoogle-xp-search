@@ -95,7 +95,7 @@ function writeTorrent(baseDir) {
     "created by": "Oldoodle release builder",
     "creation date": Math.floor(Date.now() / 1000),
     "url-list": [
-      "https://github.com/Aki2457/oldoogle-xp-search/releases/download/v1.0.1/Oldoodle_Release.zip"
+      "https://github.com/Aki2457/oldoodle/releases/download/v1.0.1/Oldoodle_Release.zip"
     ],
     "info": {
       "name": "Oldoodle",
@@ -150,7 +150,7 @@ Important notes:
 write(path.join(readmeDir, "Oldoodle_Github_Details.md"), `
 # Oldoodle GitHub Details
 
-Repository: https://github.com/Aki2457/oldoogle-xp-search
+Repository: https://github.com/Aki2457/oldoodle
 
 The repository is private. It contains source code only. Secrets, generated binaries, downloaded Chromium builds, and local dependency folders are ignored by git.
 

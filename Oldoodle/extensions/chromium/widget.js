@@ -79,7 +79,7 @@ async function loadSettings() {
   endpointInput.value = saved.oldoodleWidgetEndpoint || defaultEndpoint;
   queryInput.value = saved.oldoodleWidgetQuery || "";
   notes.value = saved.oldoodleWidgetNote || "";
-  qrText.value = saved.oldoodleWidgetQr || "https://aki2457.github.io/";
+  qrText.value = saved.oldoodleWidgetQr || "https://[I have forgot my Github Username].github.io/oldoodle/";
   makeQr();
 }
 
@@ -109,7 +109,7 @@ async function search() {
 }
 
 function makeQr() {
-  const value = qrText.value.trim() || "https://aki2457.github.io/";
+  const value = qrText.value.trim() || "https://[I have forgot my Github Username].github.io/oldoodle/";
   qrImage.src = `https://api.qrserver.com/v1/create-qr-code/?size=170x170&data=${encodeURIComponent(value)}`;
 }
 

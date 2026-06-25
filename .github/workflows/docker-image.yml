@@ -20,7 +20,7 @@ permissions:
   packages: write
 
 env:
-  IMAGE_NAME: ghcr.io/aki2457/oldoodle-search-engine
+  IMAGE_NAME: ghcr.io/aki2457/oldoodle
 
 jobs:
   docker:

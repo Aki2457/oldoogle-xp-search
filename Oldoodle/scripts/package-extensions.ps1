@@ -11,12 +11,7 @@ Remove-Item -Force -ErrorAction SilentlyContinue $chromiumZip, $firefoxXpi, $fir
 Remove-Item -Force -ErrorAction SilentlyContinue `
   (Join-Path $dist "oldoodle-xp-chromium-extension.zip"), `
   (Join-Path $dist "oldoodle-xp-firefox-extension.xpi"), `
-  (Join-Path $dist "oldoodle-xp-firefox-extension.zip"), `
-  (Join-Path $dist "oldoogle-xp-chromium-extension.zip"), `
-  (Join-Path $dist "oldoogle-xp-chromium-extension.crx"), `
-  (Join-Path $dist "oldoogle-xp-chromium-extension.pem"), `
-  (Join-Path $dist "oldoogle-xp-firefox-extension.xpi"), `
-  (Join-Path $dist "oldoogle-xp-firefox-extension.zip")
+  (Join-Path $dist "oldoodle-xp-firefox-extension.zip")
 
 Compress-Archive -Path (Join-Path $root "extensions\chromium\*") -DestinationPath $chromiumZip
 Compress-Archive -Path (Join-Path $root "extensions\firefox\*") -DestinationPath $firefoxZip

@@ -5,7 +5,7 @@
 Open:
 
 ```text
-https://aki2457.github.io/
+https://[I have forgot my Github Username].github.io/oldoodle/
 ```
 
 ## Test Search Speed
@@ -13,7 +13,7 @@ https://aki2457.github.io/
 Open:
 
 ```text
-https://aki2457.github.io/speed-test/
+https://[I have forgot my Github Username].github.io/oldoodle/speed-test/
 ```
 
 The default endpoint is:
@@ -27,7 +27,7 @@ http://localhost:3000
 Release page:
 
 ```text
-https://github.com/Aki2457/oldoodle-search-engine/releases/tag/v1.0.3
+https://github.com/Aki2457/oldoodle/releases/tag/v1.0.3
 ```
 
 The release ZIP contains the app package, extension packages, guides, and torrent metadata.

@@ -114,7 +114,7 @@ async function duckDuckGoSearch(query) {
       signal: controller.signal,
       headers: {
         "accept": "text/html,application/xhtml+xml",
-        "user-agent": "OldoodleXP/1.0 (+https://github.com/Aki2457/oldoogle-xp-search)"
+        "user-agent": "OldoodleXP/1.0 (+https://github.com/Aki2457/oldoodle)"
       }
     });
 

@@ -17,7 +17,7 @@ http://localhost:8080/api/health
 ## Docker Run
 
 ```sh
-docker run -p 8080:8080 ghcr.io/aki2457/oldoodle-search-engine:latest
+docker run -p 8080:8080 ghcr.io/aki2457/oldoodle:latest
 ```
 
 ## Environment Variables
