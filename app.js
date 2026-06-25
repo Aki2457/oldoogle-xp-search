@@ -55,6 +55,7 @@ let searchProviderSetting = localStorage.getItem("oldoodleSearchProvider") || "d
 let searchEndpointMode = localStorage.getItem("oldoodleSearchEndpointMode") || "auto";
 let customSearchEndpoint = localStorage.getItem("oldoodleSearchEndpoint") || "";
 const deployedApiBase = normalizeEndpoint(window.OLDOODLE_API_BASE || "");
+const apifyActorId = "apify/google-search-scraper";
 const apiBase = deployedApiBase || (["chrome-extension:", "moz-extension:", "file:"].includes(location.protocol)
   ? "http://localhost:3000"
   : "");
@@ -265,14 +266,22 @@ async function testApiSettings() {
 
   apiManagerStatus.textContent = "Testing search API...";
   try {
-    const url = new URL(`${getConfiguredApiBase()}/api/search.json`, location.href);
-    url.searchParams.set("q", "oldoodle test");
-    url.searchParams.set("provider", searchProviderSetting);
-    if (searchProviderSetting === "apify" && apifyApiKey) url.searchParams.set("apifyToken", apifyApiKey);
-    const response = await fetch(url);
-    const data = await response.json();
-    if (!response.ok) throw new Error(data.error || `HTTP ${response.status}`);
-    apiManagerStatus.textContent = `OK: ${data.count} ${data.provider} results.`;
+    const configuredApiBase = getConfiguredApiBase();
+    if (!configuredApiBase && location.hostname.endsWith("github.io")) {
+      const items = searchProviderSetting === "apify" && apifyApiKey
+        ? await apifyStaticSearch("oldoodle test")
+        : await duckDuckGoStaticSearch("oldoodle test");
+      apiManagerStatus.textContent = `OK: ${items.length} static ${searchProviderSetting} results.`;
+    } else {
+      const url = new URL(`${configuredApiBase}/api/search.json`, location.href);
+      url.searchParams.set("q", "oldoodle test");
+      url.searchParams.set("provider", searchProviderSetting);
+      if (searchProviderSetting === "apify" && apifyApiKey) url.searchParams.set("apifyToken", apifyApiKey);
+      const response = await fetch(url);
+      const data = await response.json();
+      if (!response.ok) throw new Error(data.error || `HTTP ${response.status}`);
+      apiManagerStatus.textContent = `OK: ${data.count} ${data.provider} results.`;
+    }
   } catch (error) {
     apiManagerStatus.textContent = `Failed: ${error.message}`;
   } finally {
@@ -400,6 +409,160 @@ function renderResults(items) {
   }
 }
 
+function cleanResultText(value) {
+  const wrapper = document.createElement("span");
+  wrapper.innerHTML = String(value || "");
+  return wrapper.textContent.replace(/\s+/g, " ").trim();
+}
+
+function normalizeResult(item) {
+  return {
+    title: cleanResultText(item.title || item.name || item.Text || item.FirstURL || item.searchQuery?.term || "Untitled result"),
+    url: cleanResultText(item.url || item.link || item.FirstURL || item.displayedUrl || ""),
+    description: cleanResultText(item.description || item.text || item.snippet || item.Result || item.preview || ""),
+    type: cleanResultText(item.type || item.resultType || item.displayedUrl || "result")
+  };
+}
+
+function flattenDuckDuckGoTopics(topics, output = []) {
+  for (const topic of topics || []) {
+    if (Array.isArray(topic.Topics)) {
+      flattenDuckDuckGoTopics(topic.Topics, output);
+    } else if (topic.FirstURL || topic.Text) {
+      output.push(topic);
+    }
+  }
+  return output;
+}
+
+function decodeDuckDuckGoUrl(value) {
+  try {
+    const url = new URL(value, "https://duckduckgo.com");
+    const uddg = url.searchParams.get("uddg");
+    return uddg ? decodeURIComponent(uddg) : url.href;
+  } catch {
+    return value;
+  }
+}
+
+function parseDuckDuckGoMarkdown(markdown) {
+  const lines = String(markdown || "").split(/\r?\n/);
+  const items = [];
+
+  for (let index = 0; index < lines.length; index += 1) {
+    const match = lines[index].match(/^## \[([^\]]+)\]\(([^)]+)\)/);
+    if (!match) continue;
+
+    const description = [];
+    for (let offset = index + 1; offset < Math.min(lines.length, index + 8); offset += 1) {
+      const line = lines[offset].trim();
+      if (!line || line.startsWith("[!") || line.startsWith("## ")) continue;
+      if (/^\[[^\]]+\]\([^)]+\)$/.test(line)) continue;
+      description.push(line.replace(/\[([^\]]+)\]\([^)]+\)/g, "$1"));
+      if (description.join(" ").length > 160) break;
+    }
+
+    items.push(normalizeResult({
+      title: match[1],
+      url: decodeDuckDuckGoUrl(match[2]),
+      description: description.join(" "),
+      type: "duckduckgo"
+    }));
+  }
+
+  return items.filter((item) => item.title && item.url).slice(0, 12);
+}
+
+async function duckDuckGoInstantSearch(query) {
+  const url = new URL("https://api.duckduckgo.com/");
+  url.searchParams.set("q", query);
+  url.searchParams.set("format", "json");
+  url.searchParams.set("no_html", "1");
+  url.searchParams.set("skip_disambig", "1");
+
+  const response = await fetch(url);
+  const data = await response.json();
+  if (!response.ok) throw new Error(data.error || `DuckDuckGo HTTP ${response.status}`);
+
+  const items = [];
+  if (data.AbstractURL || data.AbstractText) {
+    items.push(normalizeResult({
+      title: data.Heading || query,
+      url: data.AbstractURL,
+      description: data.AbstractText,
+      type: data.AbstractSource || "duckduckgo"
+    }));
+  }
+
+  flattenDuckDuckGoTopics(data.RelatedTopics, items);
+  return items.map(normalizeResult).filter((item) => item.title && item.url).slice(0, 12);
+}
+
+async function duckDuckGoStaticSearch(query) {
+  const target = `https://duckduckgo.com/html/?q=${encodeURIComponent(query)}`;
+  const response = await fetch(`https://r.jina.ai/http://${target}`);
+  const markdown = await response.text();
+  if (!response.ok) throw new Error(`DuckDuckGo reader HTTP ${response.status}`);
+
+  const items = parseDuckDuckGoMarkdown(markdown);
+  if (items.length) return items;
+  return duckDuckGoInstantSearch(query);
+}
+
+async function apifyStaticSearch(query) {
+  if (!apifyApiKey) throw new Error("Apify API key is missing.");
+
+  const url = new URL(`https://api.apify.com/v2/acts/${encodeURIComponent(apifyActorId)}/run-sync-get-dataset-items`);
+  url.searchParams.set("token", apifyApiKey);
+  url.searchParams.set("clean", "true");
+  url.searchParams.set("timeout", "60");
+
+  const response = await fetch(url, {
+    method: "POST",
+    headers: { "content-type": "application/json" },
+    body: JSON.stringify({
+      queries: query,
+      resultsPerPage: 10,
+      maxPagesPerQuery: 1,
+      countryCode: "us",
+      languageCode: "en",
+      mobileResults: false,
+      saveHtml: false,
+      saveHtmlToKeyValueStore: false
+    })
+  });
+
+  const data = await response.json();
+  if (!response.ok) {
+    throw new Error(data.error?.message || data.message || `Apify HTTP ${response.status}`);
+  }
+
+  const rawItems = Array.isArray(data) ? data.flatMap((entry) => {
+    if (Array.isArray(entry.organicResults)) return entry.organicResults;
+    if (Array.isArray(entry.results)) return entry.results;
+    return [entry];
+  }) : [];
+
+  return rawItems.map(normalizeResult).filter((item) => item.title && item.url).slice(0, 12);
+}
+
+async function runStaticSearch(query) {
+  setSearchProgress("connecting", 42);
+  const provider = searchProviderSetting === "apify" && apifyApiKey ? "apify" : "duckduckgo";
+  const items = provider === "apify"
+    ? await apifyStaticSearch(query)
+    : await duckDuckGoStaticSearch(query);
+
+  setSearchProgress("receiving", 82);
+  renderResults(items);
+  setStatus(`Showing ${items.length} static ${provider} results for "${query}"`);
+  setSearchProgress("complete", 100);
+  nudgePet({ energy: -2, focus: 6, bond: 2, mood: "happy" });
+  setPet("happy", "OK", `${items.length} results loaded`);
+  if (browserStatusText) browserStatusText.textContent = "Done";
+  window.setTimeout(() => setSearchProgress("idle"), 700);
+}
+
 function makeSearchFallbackItems(query) {
   const encoded = encodeURIComponent(query);
   return [
@@ -434,7 +597,7 @@ function renderSearchFallback(query, reason = "Live search API is not available 
   window.setTimeout(() => setSearchProgress("idle"), 900);
 }
 
-function runSearch(query) {
+async function runSearch(query) {
   if (activeEvents) activeEvents.close();
   resultsBox.innerHTML = "";
   setStatus("Starting search...");
@@ -444,7 +607,11 @@ function runSearch(query) {
 
   const configuredApiBase = getConfiguredApiBase();
   if (!configuredApiBase && location.hostname.endsWith("github.io")) {
-    renderSearchFallback(query, "GitHub Pages is a static host.");
+    try {
+      await runStaticSearch(query);
+    } catch (error) {
+      renderSearchFallback(query, `Static search failed: ${error.message}.`);
+    }
     return;
   }
 
