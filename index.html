@@ -1,0 +1,266 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Oldoodle</title>
+    <link rel="icon" href="site-icon.svg" type="image/svg+xml">
+    <link rel="stylesheet" href="styles.css">
+  </head>
+  <body>
+    <main class="desktop">
+      <section class="window" aria-label="Windows XP search window">
+        <header class="titlebar">
+          <div class="title"><span class="ie-icon">e</span> Oldoodle - Microsoft Internet Explorer</div>
+          <div class="window-controls" aria-hidden="true">
+            <span>_</span><span>[]</span><span>X</span>
+          </div>
+        </header>
+
+        <div class="menu">File&nbsp;&nbsp; Edit&nbsp;&nbsp; View&nbsp;&nbsp; Favorites&nbsp;&nbsp; Tools&nbsp;&nbsp; Help</div>
+
+        <nav class="toolbar" aria-label="Browser toolbar">
+          <button class="tool-button back" type="button"><span class="tool-glyph">&lt;</span> Back</button>
+          <button class="tool-button forward" type="button"><span class="tool-glyph">&gt;</span> Forward</button>
+          <span class="toolbar-separator" aria-hidden="true"></span>
+          <button class="tool-icon" type="button">X</button>
+          <button class="tool-icon" type="button">R</button>
+          <button class="tool-icon" type="button">Home</button>
+          <span class="toolbar-separator" aria-hidden="true"></span>
+          <button class="tool-button" type="button">Search</button>
+          <button class="tool-button" type="button">Favorites</button>
+          <span class="toolbar-separator" aria-hidden="true"></span>
+          <button class="tool-icon" type="button">Mail</button>
+          <button class="tool-icon" type="button">Print</button>
+        </nav>
+
+        <div class="addressbar">
+          <span class="address-label">Address</span>
+          <div class="address"><span class="page-icon">e</span><span>http://www.oldoodle.com/</span><span class="address-caret">v</span></div>
+          <button class="go" type="button">Go</button>
+          <span class="links-right">Links &gt;&gt;</span>
+        </div>
+
+        <div class="linkbar">
+          <strong>Search</strong>
+          <span>Images</span>
+          <span>Maps</span>
+          <span>News</span>
+          <span>Gmail</span>
+          <span>More...</span>
+          <span class="signin">Web History | Settings | Sign in</span>
+        </div>
+
+        <section class="page">
+          <div id="doodleStage" class="doodle-stage" aria-live="polite">
+            <span id="doodleBadge" class="doodle-badge">Classic</span>
+            <div class="doodle-controls" aria-label="Oldoodle doodles">
+              <button type="button" data-doodle="classic">Classic</button>
+              <button type="button" data-doodle="april-fools">April Fools</button>
+              <button type="button" data-doodle="birthday">Birthday</button>
+              <button type="button" data-doodle="winter">Winter</button>
+              <button type="button" data-doodle="random">Random</button>
+            </div>
+          </div>
+          <section class="search-home" aria-label="Oldoodle search">
+            <h1 class="logo">
+              <img src="oldoodle-logo.svg" width="560" height="130" alt="Oldoodle">
+            </h1>
+            <div class="search-layout">
+              <form id="searchForm" class="search-box">
+                <input id="query" name="q" autocomplete="off" autofocus>
+                <div class="search-actions">
+                  <button type="submit">Oldoodle Search</button>
+                  <button id="lucky" type="button">I'm Feeling Lucky</button>
+                </div>
+              </form>
+              <aside class="links">
+                <a href="#query">Advanced search</a>
+                <a href="#query">Language tools</a>
+              </aside>
+            </div>
+            <div class="api-key-row">
+              <button id="apiKeyButton" type="button">Search API Manager</button>
+              <button id="clearApiKeyButton" type="button">Reset API</button>
+              <span id="apiKeyStatus">Using default search</span>
+            </div>
+          </section>
+          <section id="status" class="status" aria-live="polite"></section>
+          <div id="searchProgress" class="search-progress" aria-hidden="true">
+            <span id="searchProgressFill"></span>
+          </div>
+          <section id="results" class="results" aria-live="polite"></section>
+          <section id="gameLibrary" class="game-library" aria-label="Airplane game library" hidden>
+            <header>
+              <img class="game-title-icon" src="airplane-icon.svg" width="32" height="32" alt="">
+              <div>
+                <strong>Airplane</strong>
+                <span>Offline games</span>
+              </div>
+              <button id="closeGames" type="button">X</button>
+            </header>
+            <nav class="game-tabs" aria-label="Games">
+              <button type="button" data-game="oldoodle">Oldooooooooooodle</button>
+              <button type="button" data-game="gravity">Gravity</button>
+              <button type="button" data-game="anti-gravity">Anti-Gravity</button>
+              <button type="button" data-game="space">Space</button>
+              <button type="button" data-game="dino">Dino game</button>
+            </nav>
+            <div id="gameStage" class="game-stage" tabindex="0"></div>
+          </section>
+          <div class="oldoodle-footer">
+            <span>Advertising Programs</span>
+            <span>Business Solutions</span>
+            <span>About Oldoodle</span>
+            <a href="made-possible.html">Made possible with</a>
+          </div>
+        </section>
+        <div class="browser-status">
+          <span id="browserStatusText">Done</span>
+          <span class="status-grip">Internet</span>
+        </div>
+      </section>
+
+      <section id="codexPet" class="codex-pet" aria-label="404 pet">
+        <span id="petBubble" class="pet-bubble" aria-live="polite">standing by</span>
+        <button id="petSprite" class="pet-sprite" type="button" aria-label="Talk to 404">
+          <span class="pet-hanger" aria-hidden="true"></span>
+          <span class="pet-body" aria-hidden="true">
+            <span class="pet-screen"><span id="petFace">404</span></span>
+            <span class="pet-arm left"></span>
+            <span class="pet-arm right"></span>
+            <span class="pet-leg left"></span>
+            <span class="pet-leg right"></span>
+          </span>
+        </button>
+        <aside id="petPanel" class="pet-panel" aria-label="404 pet controls">
+          <header>
+            <strong>404</strong>
+            <span id="petMoodLabel">idle</span>
+          </header>
+          <div class="pet-stat">
+            <span>energy</span>
+            <meter id="petEnergy" min="0" max="100" value="72"></meter>
+          </div>
+          <div class="pet-stat">
+            <span>focus</span>
+            <meter id="petFocus" min="0" max="100" value="64"></meter>
+          </div>
+          <div class="pet-stat">
+            <span>bond</span>
+            <meter id="petBond" min="0" max="100" value="58"></meter>
+          </div>
+          <div class="pet-actions" aria-label="Pet actions">
+            <button type="button" data-pet-action="snack">snack</button>
+            <button type="button" data-pet-action="nap">nap</button>
+            <button type="button" data-pet-action="play">play</button>
+            <button type="button" data-pet-action="debug">debug</button>
+          </div>
+        </aside>
+      </section>
+
+      <nav id="startMenu" class="start-menu" aria-label="Start menu" aria-hidden="true">
+        <div class="start-menu-header">
+          <span class="user-tile">O</span>
+          <strong>Oldoodle User</strong>
+        </div>
+        <div class="start-menu-body">
+          <div class="start-menu-left">
+            <button class="start-item pinned" type="button" data-start-action="focus-search">
+              <span class="start-icon ie">e</span>
+              <span><strong>Internet</strong><small>Oldoodle Search</small></span>
+            </button>
+            <button class="start-item pinned" type="button" data-start-action="lucky">
+              <span class="start-icon star">*</span>
+              <span><strong>I'm Feeling Lucky</strong><small>Open first result</small></span>
+            </button>
+            <div class="start-divider"></div>
+            <button class="start-item" type="button" data-start-action="sample-xp">Windows XP search</button>
+            <button class="start-item" type="button" data-start-action="sample-google">Old Google search</button>
+            <button class="start-item" type="button" data-start-action="sample-apify">Apify widgets</button>
+            <button class="start-item" type="button" data-start-action="doodle-april">April Fools Doodle</button>
+            <button class="start-item" type="button" data-start-action="doodle-random">Random Doodle</button>
+            <button class="start-item" type="button" data-start-action="airplane">
+              <span class="start-icon image-icon"><img src="airplane-icon.svg" width="24" height="24" alt=""></span>
+              <span><strong>Airplane</strong><small>Offline game library</small></span>
+            </button>
+            <button class="start-all" type="button" data-start-action="focus-search">All Programs <span>&gt;</span></button>
+          </div>
+          <div class="start-menu-right">
+            <button type="button" data-start-action="google">Google</button>
+            <button type="button" data-start-action="duckduckgo">DuckDuckGo</button>
+            <button type="button" data-start-action="chatgpt">ChatGPT (OpenAI)</button>
+            <div class="start-divider"></div>
+            <button type="button" data-start-action="home">My Home Page</button>
+            <button type="button" data-start-action="clear">Recent Searches</button>
+            <button type="button" data-start-action="focus-search">Search</button>
+            <button type="button" data-start-action="about">Help and Support</button>
+            <div class="start-divider"></div>
+            <button type="button" data-start-action="settings">Control Panel</button>
+            <button type="button" data-start-action="api-key">Search API Manager</button>
+            <button type="button" data-start-action="close">Run...</button>
+          </div>
+        </div>
+        <form id="startSearchForm" class="start-search" role="search">
+          <label for="startSearchInput">Search</label>
+          <input id="startSearchInput" type="search" autocomplete="off" placeholder="Type an app or game">
+          <button type="submit">Go</button>
+        </form>
+        <p id="startSearchEmpty" class="start-search-empty" hidden>No Start menu matches. Press Go to search Oldoodle.</p>
+        <div class="start-menu-footer">
+          <button type="button" data-start-action="logoff">Log Off</button>
+          <button type="button" data-start-action="shutdown">Turn Off Computer</button>
+        </div>
+      </nav>
+
+      <footer class="taskbar">
+        <button id="startButton" class="start" type="button" aria-haspopup="true" aria-expanded="false" aria-controls="startMenu">start</button>
+        <span class="quick">IE&nbsp; OE&nbsp; &gt;&gt;</span>
+        <button class="task" type="button">Project IE6 WinXP</button>
+        <button class="task active" type="button">Oldoodle - Microsoft Int...</button>
+        <button id="petToggle" class="task pet-toggle" type="button" aria-pressed="true">404 Pet: on</button>
+        <span class="tray">Internet | 11:41 PM</span>
+      </footer>
+
+      <dialog id="apiKeyDialog" class="api-key-dialog search-api-dialog" aria-labelledby="apiKeyTitle">
+        <form method="dialog">
+          <header>
+            <strong id="apiKeyTitle">Search API Manager</strong>
+            <button id="apiKeyClose" value="cancel" type="submit">X</button>
+          </header>
+          <p>Choose the search backend Oldoodle should use. Secrets are saved only in this browser's local storage.</p>
+          <label>
+            Provider
+            <select id="searchProviderSelect">
+              <option value="duckduckgo">DuckDuckGo fast index</option>
+              <option value="apify">Apify Google Search actor</option>
+            </select>
+          </label>
+          <label>
+            Endpoint
+            <select id="searchEndpointSelect">
+              <option value="auto">Auto / current server</option>
+              <option value="local">Localhost :3000</option>
+              <option value="custom">Custom endpoint</option>
+            </select>
+          </label>
+          <label id="customEndpointRow">
+            Custom endpoint
+            <input id="searchEndpointInput" type="url" autocomplete="off" placeholder="https://example.com">
+          </label>
+          <label>
+            Apify API key
+            <input id="apiKeyInput" type="password" autocomplete="off" placeholder="apify_api_...">
+          </label>
+          <p id="apiManagerStatus" class="api-manager-status" aria-live="polite"></p>
+          <div class="api-key-actions">
+            <button id="apiManagerTest" value="test" type="button">Test</button>
+            <button id="apiKeySave" value="save" type="submit">Save</button>
+            <button value="cancel" type="submit">Cancel</button>
+          </div>
+        </form>
+      </dialog>
+    </main>
+    <script src="app.js"></script>
+  </body>
+</html>
