@@ -5,13 +5,13 @@ on:
     branches:
       - main
     paths:
-      - Dockerfile
-      - .dockerignore
-      - docker-compose.yml
-      - package.json
-      - package-lock.json
-      - server.js
-      - public/**
+      - Oldoodle/Dockerfile
+      - Oldoodle/.dockerignore
+      - Oldoodle/docker-compose.yml
+      - Oldoodle/package.json
+      - Oldoodle/package-lock.json
+      - Oldoodle/server.js
+      - Oldoodle/public/**
       - .github/workflows/docker-image.yml
   workflow_dispatch:
 
@@ -43,7 +43,7 @@ jobs:
       - name: Build and publish
         uses: docker/build-push-action@v6
         with:
-          context: .
+          context: Oldoodle
           push: ${{ github.event_name != 'pull_request' }}
           tags: |
             ${{ env.IMAGE_NAME }}:latest
