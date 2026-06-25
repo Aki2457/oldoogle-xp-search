@@ -234,6 +234,14 @@
             <select id="searchProviderSelect">
               <option value="duckduckgo">DuckDuckGo fast index</option>
               <option value="apify">Apify Google Search actor</option>
+              <option value="custom">Custom JSON search</option>
+            </select>
+          </label>
+          <label>
+            Apify key mode
+            <select id="apifyKeyModeSelect">
+              <option value="server">Server only / hidden</option>
+              <option value="browser">Browser key / static Pages</option>
             </select>
           </label>
           <label>
@@ -247,6 +255,10 @@
           <label id="customEndpointRow">
             Custom endpoint
             <input id="searchEndpointInput" type="url" autocomplete="off" placeholder="https://example.com">
+          </label>
+          <label id="customSearchUrlRow">
+            Custom search URL
+            <input id="customSearchUrlInput" type="url" autocomplete="off" placeholder="https://example.com/search.json?q={q}">
           </label>
           <label>
             Apify API key

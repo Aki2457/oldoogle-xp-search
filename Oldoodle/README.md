@@ -107,6 +107,7 @@ Optional `.env` values:
 PORT=3000
 SEARCH_PROVIDER=duckduckgo
 SEARCH_TIMEOUT_MS=5000
+CUSTOM_SEARCH_URL=https://example.com/search.json?q={q}
 APIFY_TOKEN=apify_api_demo_replace_me
 APIFY_ACTOR_ID=apify/google-search-scraper
 OLDOODLE_PUBLIC_SITE=https://[I have forgot my Github Username].github.io/oldoodle/
@@ -136,6 +137,10 @@ DISCORD_STATUS_TEXT=developing Oldoodle
 
 Use `SEARCH_PROVIDER=apify` if you want Apify as the primary provider.
 The checked-in `.env.example` uses fake demo credentials only; keep real keys in a local `.env` or deployment secrets.
+
+In the Search API Manager, use `Apify key mode = Server only / hidden` when the Node server has `APIFY_TOKEN` in `.env`. In that mode, the browser never stores or sends the Apify token. Use `Browser key / static Pages` only when you deliberately want GitHub Pages or an extension to call Apify directly.
+
+For custom search, choose `Custom JSON search` and enter a URL template such as `https://example.com/search.json?q={q}`. The response should be either an array of results or an object with `items`/`results`, using fields like `title`, `url`, `description`, and `type`.
 
 ## Discord Development Bot
 

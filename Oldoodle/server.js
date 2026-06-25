@@ -12,6 +12,7 @@ const token = process.env.APIFY_TOKEN;
 const actorId = process.env.APIFY_ACTOR_ID || "apify/google-search-scraper";
 const searchProvider = (process.env.SEARCH_PROVIDER || "duckduckgo").toLowerCase();
 const searchTimeoutMs = Number(process.env.SEARCH_TIMEOUT_MS || 5000);
+const customSearchTemplate = process.env.CUSTOM_SEARCH_URL || "";
 
 app.use(express.json());
 app.use(express.static(path.join(__dirname, "public")));
@@ -38,7 +39,7 @@ function getApifyToken(req) {
 
 function getSearchProvider(req) {
   const provider = String(req?.query?.provider || "").trim().toLowerCase();
-  if (["apify", "duckduckgo"].includes(provider)) return provider;
+  if (["apify", "duckduckgo", "custom"].includes(provider)) return provider;
   return req.query.apifyToken ? "apify" : searchProvider;
 }
 
@@ -197,7 +198,26 @@ async function apifySearch(query, sendStatus = () => {}, apifyToken = token) {
   return items.slice(0, 12).map(normalizeItem);
 }
 
+async function customSearch(query, customSearchUrl) {
+  if (!customSearchUrl) throw new Error("Custom search URL is missing");
+  const url = customSearchUrl.includes("{q}")
+    ? customSearchUrl.replaceAll("{q}", encodeURIComponent(query))
+    : `${customSearchUrl}${customSearchUrl.includes("?") ? "&" : "?"}q=${encodeURIComponent(query)}`;
+  const response = await fetch(url);
+  const data = await response.json();
+  if (!response.ok) throw new Error(data.error || data.message || `Custom search failed (${response.status})`);
+  const items = Array.isArray(data) ? data : Array.isArray(data.items) ? data.items : Array.isArray(data.results) ? data.results : [];
+  return items.slice(0, 12).map(normalizeItem);
+}
+
 async function search(query, sendStatus = () => {}, apifyToken = token, preferredProvider = searchProvider) {
+  if (preferredProvider === "custom") {
+    return {
+      provider: "custom",
+      items: await customSearch(query, customSearchTemplate)
+    };
+  }
+
   if (preferredProvider === "apify") {
     return {
       provider: "apify",
