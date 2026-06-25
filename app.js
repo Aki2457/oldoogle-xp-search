@@ -29,9 +29,12 @@ const apiKeyDialog = document.querySelector("#apiKeyDialog");
 const apiKeyInput = document.querySelector("#apiKeyInput");
 const apiKeySave = document.querySelector("#apiKeySave");
 const searchProviderSelect = document.querySelector("#searchProviderSelect");
+const apifyKeyModeSelect = document.querySelector("#apifyKeyModeSelect");
 const searchEndpointSelect = document.querySelector("#searchEndpointSelect");
 const searchEndpointInput = document.querySelector("#searchEndpointInput");
 const customEndpointRow = document.querySelector("#customEndpointRow");
+const customSearchUrlInput = document.querySelector("#customSearchUrlInput");
+const customSearchUrlRow = document.querySelector("#customSearchUrlRow");
 const apiManagerStatus = document.querySelector("#apiManagerStatus");
 const apiManagerTest = document.querySelector("#apiManagerTest");
 const gameLibrary = document.querySelector("#gameLibrary");
@@ -51,9 +54,11 @@ let petEnabled = localStorage.getItem("oldoolePetEnabled") !== "false";
 let petState = loadPetState();
 let currentDoodle = localStorage.getItem("oldoodleDoodle") || autoDoodle();
 let apifyApiKey = localStorage.getItem("oldoodleApifyApiKey") || "";
+let apifyKeyMode = localStorage.getItem("oldoodleApifyKeyMode") || "server";
 let searchProviderSetting = localStorage.getItem("oldoodleSearchProvider") || "duckduckgo";
 let searchEndpointMode = localStorage.getItem("oldoodleSearchEndpointMode") || "auto";
 let customSearchEndpoint = localStorage.getItem("oldoodleSearchEndpoint") || "";
+let customSearchUrl = localStorage.getItem("oldoodleCustomSearchUrl") || "";
 const deployedApiBase = normalizeEndpoint(window.OLDOODLE_API_BASE || "");
 const apifyActorId = "apify/google-search-scraper";
 const apiBase = deployedApiBase || (["chrome-extension:", "moz-extension:", "file:"].includes(location.protocol)
@@ -166,9 +171,12 @@ function setStatus(message) {
 
 function updateApiKeyStatus() {
   if (!apiKeyStatus) return;
-  const providerLabel = searchProviderSetting === "apify" ? "Apify" : "DuckDuckGo";
+  const providerLabel = searchProviderSetting === "apify" ? "Apify" : searchProviderSetting === "custom" ? "Custom" : "DuckDuckGo";
   const endpointLabel = searchEndpointMode === "custom" && customSearchEndpoint ? "custom endpoint" : searchEndpointMode === "local" ? "localhost" : "current server";
-  apiKeyStatus.textContent = `${providerLabel} via ${endpointLabel}${apifyApiKey ? " with key" : ""}`;
+  const keyLabel = searchProviderSetting === "apify"
+    ? apifyKeyMode === "server" ? "server-hidden key" : apifyApiKey ? "browser key" : "no browser key"
+    : "";
+  apiKeyStatus.textContent = `${providerLabel} via ${endpointLabel}${keyLabel ? ` (${keyLabel})` : ""}`;
   apiKeyStatus.classList.toggle("has-key", Boolean(apifyApiKey));
 }
 
@@ -176,8 +184,10 @@ function openApiKeyDialog() {
   if (!apiKeyDialog || !apiKeyInput) return;
   apiKeyInput.value = apifyApiKey;
   if (searchProviderSelect) searchProviderSelect.value = searchProviderSetting;
+  if (apifyKeyModeSelect) apifyKeyModeSelect.value = apifyKeyMode;
   if (searchEndpointSelect) searchEndpointSelect.value = searchEndpointMode;
   if (searchEndpointInput) searchEndpointInput.value = customSearchEndpoint;
+  if (customSearchUrlInput) customSearchUrlInput.value = customSearchUrl;
   updateEndpointRow();
   if (apiManagerStatus) apiManagerStatus.textContent = "";
   if (typeof apiKeyDialog.showModal === "function") {
@@ -189,8 +199,9 @@ function openApiKeyDialog() {
 }
 
 function updateEndpointRow() {
-  if (!customEndpointRow) return;
-  customEndpointRow.hidden = searchEndpointSelect?.value !== "custom";
+  if (customEndpointRow) customEndpointRow.hidden = searchEndpointSelect?.value !== "custom";
+  if (customSearchUrlRow) customSearchUrlRow.hidden = searchProviderSelect?.value !== "custom";
+  if (apiKeyInput) apiKeyInput.closest("label").hidden = searchProviderSelect?.value !== "apify" || apifyKeyModeSelect?.value !== "browser";
 }
 
 function normalizeEndpoint(value) {
@@ -205,17 +216,25 @@ function getConfiguredApiBase() {
 
 function saveApiSettings() {
   searchProviderSetting = searchProviderSelect?.value || "duckduckgo";
+  apifyKeyMode = apifyKeyModeSelect?.value || "server";
   searchEndpointMode = searchEndpointSelect?.value || "auto";
   customSearchEndpoint = normalizeEndpoint(searchEndpointInput?.value || "");
+  customSearchUrl = String(customSearchUrlInput?.value || "").trim();
   apifyApiKey = String(apiKeyInput?.value || "").trim();
 
   localStorage.setItem("oldoodleSearchProvider", searchProviderSetting);
+  localStorage.setItem("oldoodleApifyKeyMode", apifyKeyMode);
   localStorage.setItem("oldoodleSearchEndpointMode", searchEndpointMode);
   if (customSearchEndpoint) localStorage.setItem("oldoodleSearchEndpoint", customSearchEndpoint);
   else localStorage.removeItem("oldoodleSearchEndpoint");
+  if (customSearchUrl) localStorage.setItem("oldoodleCustomSearchUrl", customSearchUrl);
+  else localStorage.removeItem("oldoodleCustomSearchUrl");
 
-  if (apifyApiKey) localStorage.setItem("oldoodleApifyApiKey", apifyApiKey);
-  else localStorage.removeItem("oldoodleApifyApiKey");
+  if (apifyKeyMode === "browser" && apifyApiKey) localStorage.setItem("oldoodleApifyApiKey", apifyApiKey);
+  else {
+    apifyApiKey = "";
+    localStorage.removeItem("oldoodleApifyApiKey");
+  }
   localStorage.setItem("oldoodleApifyPromptSeen", "true");
 
   updateApiKeyStatus();
@@ -225,13 +244,17 @@ function saveApiSettings() {
 
 function resetApiSettings() {
   apifyApiKey = "";
+  apifyKeyMode = "server";
   searchProviderSetting = "duckduckgo";
   searchEndpointMode = "auto";
   customSearchEndpoint = "";
+  customSearchUrl = "";
   localStorage.removeItem("oldoodleApifyApiKey");
+  localStorage.removeItem("oldoodleApifyKeyMode");
   localStorage.removeItem("oldoodleSearchProvider");
   localStorage.removeItem("oldoodleSearchEndpointMode");
   localStorage.removeItem("oldoodleSearchEndpoint");
+  localStorage.removeItem("oldoodleCustomSearchUrl");
   updateApiKeyStatus();
   setStatus("Search API settings reset.");
   setPet("idle", "404", "default search");
@@ -255,20 +278,26 @@ function saveApiKey(value) {
 async function testApiSettings() {
   if (!apiManagerStatus) return;
   const previousProvider = searchProviderSetting;
+  const previousKeyMode = apifyKeyMode;
   const previousEndpointMode = searchEndpointMode;
   const previousEndpoint = customSearchEndpoint;
+  const previousCustomSearchUrl = customSearchUrl;
   const previousKey = apifyApiKey;
 
   searchProviderSetting = searchProviderSelect?.value || "duckduckgo";
+  apifyKeyMode = apifyKeyModeSelect?.value || "server";
   searchEndpointMode = searchEndpointSelect?.value || "auto";
   customSearchEndpoint = normalizeEndpoint(searchEndpointInput?.value || "");
+  customSearchUrl = String(customSearchUrlInput?.value || "").trim();
   apifyApiKey = String(apiKeyInput?.value || "").trim();
 
   apiManagerStatus.textContent = "Testing search API...";
   try {
     const configuredApiBase = getConfiguredApiBase();
     if (!configuredApiBase && location.hostname.endsWith("github.io")) {
-      const items = searchProviderSetting === "apify" && apifyApiKey
+      const items = searchProviderSetting === "custom"
+        ? await customStaticSearch("oldoodle test")
+        : searchProviderSetting === "apify" && apifyKeyMode === "browser" && apifyApiKey
         ? await apifyStaticSearch("oldoodle test")
         : await duckDuckGoStaticSearch("oldoodle test");
       apiManagerStatus.textContent = `OK: ${items.length} static ${searchProviderSetting} results.`;
@@ -276,7 +305,7 @@ async function testApiSettings() {
       const url = new URL(`${configuredApiBase}/api/search.json`, location.href);
       url.searchParams.set("q", "oldoodle test");
       url.searchParams.set("provider", searchProviderSetting);
-      if (searchProviderSetting === "apify" && apifyApiKey) url.searchParams.set("apifyToken", apifyApiKey);
+      if (searchProviderSetting === "apify" && apifyKeyMode === "browser" && apifyApiKey) url.searchParams.set("apifyToken", apifyApiKey);
       const response = await fetch(url);
       const data = await response.json();
       if (!response.ok) throw new Error(data.error || `HTTP ${response.status}`);
@@ -286,8 +315,10 @@ async function testApiSettings() {
     apiManagerStatus.textContent = `Failed: ${error.message}`;
   } finally {
     searchProviderSetting = previousProvider;
+    apifyKeyMode = previousKeyMode;
     searchEndpointMode = previousEndpointMode;
     customSearchEndpoint = previousEndpoint;
+    customSearchUrl = previousCustomSearchUrl;
     apifyApiKey = previousKey;
   }
 }
@@ -546,10 +577,29 @@ async function apifyStaticSearch(query) {
   return rawItems.map(normalizeResult).filter((item) => item.title && item.url).slice(0, 12);
 }
 
+async function customStaticSearch(query) {
+  if (!customSearchUrl) throw new Error("Custom search URL is missing.");
+
+  const url = customSearchUrl.includes("{q}")
+    ? customSearchUrl.replaceAll("{q}", encodeURIComponent(query))
+    : `${customSearchUrl}${customSearchUrl.includes("?") ? "&" : "?"}q=${encodeURIComponent(query)}`;
+
+  const response = await fetch(url);
+  const data = await response.json();
+  if (!response.ok) throw new Error(data.error || data.message || `Custom search HTTP ${response.status}`);
+
+  const rawItems = Array.isArray(data) ? data : Array.isArray(data.items) ? data.items : Array.isArray(data.results) ? data.results : [];
+  return rawItems.map(normalizeResult).filter((item) => item.title && item.url).slice(0, 12);
+}
+
 async function runStaticSearch(query) {
   setSearchProgress("connecting", 42);
-  const provider = searchProviderSetting === "apify" && apifyApiKey ? "apify" : "duckduckgo";
-  const items = provider === "apify"
+  const provider = searchProviderSetting === "custom" && customSearchUrl
+    ? "custom"
+    : searchProviderSetting === "apify" && apifyKeyMode === "browser" && apifyApiKey ? "apify" : "duckduckgo";
+  const items = provider === "custom"
+    ? await customStaticSearch(query)
+    : provider === "apify"
     ? await apifyStaticSearch(query)
     : await duckDuckGoStaticSearch(query);
 
