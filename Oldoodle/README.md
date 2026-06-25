@@ -233,6 +233,14 @@ Recommended pull command for the combined app:
 docker pull ghcr.io/aki2457/oldoodle:full
 ```
 
+Split Docker refs:
+
+```text
+oldoodle-web        branch/tag -> ghcr.io/aki2457/oldoodle:web
+oldoodle-search-api branch/tag -> ghcr.io/aki2457/oldoodle:search-api
+oldoodle-full       branch/tag -> ghcr.io/aki2457/oldoodle:full
+```
+
 It runs on pushes to `main` when Docker/server files change, and can also be run manually from GitHub Actions.
 
 ## Hosted API Deployment

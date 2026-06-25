@@ -4,6 +4,13 @@ on:
   push:
     branches:
       - main
+      - oldoodle-web
+      - oldoodle-search-api
+      - oldoodle-full
+    tags:
+      - oldoodle-web
+      - oldoodle-search-api
+      - oldoodle-full
     paths:
       - Oldoodle/Dockerfile
       - Oldoodle/Dockerfile.web
@@ -32,12 +39,15 @@ jobs:
           - name: oldoodle-web
             dockerfile: Dockerfile.web
             tag: web
+            ref: oldoodle-web
           - name: oldoodle-search-api
             dockerfile: Dockerfile.search-api
             tag: search-api
+            ref: oldoodle-search-api
           - name: oldoodle-full
             dockerfile: Dockerfile.full
             tag: full
+            ref: oldoodle-full
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -54,6 +64,7 @@ jobs:
           password: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Build and publish
+        if: github.ref_name == 'main' || github.ref_name == matrix.image.ref
         uses: docker/build-push-action@v6
         with:
           context: Oldoodle
