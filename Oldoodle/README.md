@@ -202,10 +202,10 @@ http://localhost:8080/api/search?q=windows+xp
 Run the GitHub Container Registry image:
 
 ```sh
-docker run -p 8080:8080 ghcr.io/aki2457/oldoodle:latest
+docker run -p 8080:8080 ghcr.io/aki2457/oldoodle:full
 ```
 
-The Docker image listens on port `8080`.
+The full and search API images listen on port `8080`. The web-only image listens on port `80`.
 
 ## GitHub Docker Build
 
@@ -218,7 +218,19 @@ The workflow at:
 builds and publishes:
 
 ```text
-ghcr.io/aki2457/oldoodle:latest
+ghcr.io/aki2457/oldoodle-web:latest       # WebUI only
+ghcr.io/aki2457/oldoodle-search-api:latest # Search API only
+ghcr.io/aki2457/oldoodle-full:latest      # Everything
+
+ghcr.io/aki2457/oldoodle:web
+ghcr.io/aki2457/oldoodle:search-api
+ghcr.io/aki2457/oldoodle:full
+```
+
+Recommended pull command for the combined app:
+
+```sh
+docker pull ghcr.io/aki2457/oldoodle:full
 ```
 
 It runs on pushes to `main` when Docker/server files change, and can also be run manually from GitHub Actions.

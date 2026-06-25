@@ -1,8 +1,8 @@
 services:
-  oldoodle-search:
+  oldoodle-full:
     build: .
-    image: oldoodle-search:local
-    container_name: oldoodle-search
+    image: oldoodle-full:local
+    container_name: oldoodle-full
     restart: unless-stopped
     environment:
       NODE_ENV: production

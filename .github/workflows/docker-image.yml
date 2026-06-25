@@ -6,6 +6,9 @@ on:
       - main
     paths:
       - Oldoodle/Dockerfile
+      - Oldoodle/Dockerfile.web
+      - Oldoodle/Dockerfile.search-api
+      - Oldoodle/Dockerfile.full
       - Oldoodle/.dockerignore
       - Oldoodle/docker-compose.yml
       - Oldoodle/package.json
@@ -19,12 +22,22 @@ permissions:
   contents: read
   packages: write
 
-env:
-  IMAGE_NAME: ghcr.io/aki2457/oldoodle
-
 jobs:
   docker:
     runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        image:
+          - name: oldoodle-web
+            dockerfile: Dockerfile.web
+            tag: web
+          - name: oldoodle-search-api
+            dockerfile: Dockerfile.search-api
+            tag: search-api
+          - name: oldoodle-full
+            dockerfile: Dockerfile.full
+            tag: full
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -44,9 +57,11 @@ jobs:
         uses: docker/build-push-action@v6
         with:
           context: Oldoodle
+          file: Oldoodle/${{ matrix.image.dockerfile }}
           push: ${{ github.event_name != 'pull_request' }}
           tags: |
-            ${{ env.IMAGE_NAME }}:latest
-            ${{ env.IMAGE_NAME }}:${{ github.sha }}
+            ghcr.io/aki2457/${{ matrix.image.name }}:latest
+            ghcr.io/aki2457/${{ matrix.image.name }}:${{ github.sha }}
+            ghcr.io/aki2457/oldoodle:${{ matrix.image.tag }}
           cache-from: type=gha
           cache-to: type=gha,mode=max

@@ -8,6 +8,7 @@ require("dotenv").config();
 
 const app = express();
 const port = process.env.PORT || 3000;
+const apiOnly = process.env.OLDOODLE_API_ONLY === "1";
 const token = process.env.APIFY_TOKEN;
 const actorId = process.env.APIFY_ACTOR_ID || "apify/google-search-scraper";
 const searchProvider = (process.env.SEARCH_PROVIDER || "duckduckgo").toLowerCase();
@@ -15,7 +16,9 @@ const searchTimeoutMs = Number(process.env.SEARCH_TIMEOUT_MS || 5000);
 const customSearchTemplate = process.env.CUSTOM_SEARCH_URL || "";
 
 app.use(express.json());
-app.use(express.static(path.join(__dirname, "public")));
+if (!apiOnly) {
+  app.use(express.static(path.join(__dirname, "public")));
+}
 app.use("/api", (req, res, next) => {
   res.setHeader("Access-Control-Allow-Origin", "*");
   res.setHeader("Access-Control-Allow-Methods", "GET, OPTIONS");

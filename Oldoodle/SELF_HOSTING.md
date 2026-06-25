@@ -21,13 +21,19 @@ http://localhost:8080/api/search?q=windows+xp
 The workflow at `.github/workflows/docker-image.yml` builds and publishes:
 
 ```text
-ghcr.io/aki2457/oldoodle:latest
+ghcr.io/aki2457/oldoodle-web:latest
+ghcr.io/aki2457/oldoodle-search-api:latest
+ghcr.io/aki2457/oldoodle-full:latest
+
+ghcr.io/aki2457/oldoodle:web
+ghcr.io/aki2457/oldoodle:search-api
+ghcr.io/aki2457/oldoodle:full
 ```
 
-Run the published image:
+Run the full published image:
 
 ```sh
-docker run -p 8080:8080 ghcr.io/aki2457/oldoodle:latest
+docker run -p 8080:8080 ghcr.io/aki2457/oldoodle:full
 ```
 
 ## Speed Test Website
