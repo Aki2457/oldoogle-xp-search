@@ -1,4 +1,4 @@
-const CACHE_VERSION = "oldoodle-shell-v5";
+const CACHE_VERSION = "oldoodle-shell-v6";
 const SHELL_ASSETS = [
   "/",
   "/index.html",
