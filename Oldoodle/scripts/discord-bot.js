@@ -10,7 +10,7 @@ const serverId = process.env.DISCORD_SERVER_ID;
 const defaultChannelId = process.env.DISCORD_DEV_CHANNEL_ID;
 const replyPrefix = process.env.DISCORD_REPLY_PREFIX || "!oldoodle";
 const statusText = process.env.DISCORD_STATUS_TEXT || "developing Oldoodle";
-const publicSite = process.env.OLDOODLE_PUBLIC_SITE || "https://[I have forgot my Github Username].github.io/oldoodle/";
+const publicSite = process.env.OLDOODLE_PUBLIC_SITE || "https://Aki2457.github.io/oldoodle/";
 
 if (!token || token.includes("demo") || token.includes("replace_me")) {
   console.error("DISCORD_BOT_TOKEN is missing or still set to a demo value.");

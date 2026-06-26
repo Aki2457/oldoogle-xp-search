@@ -1,0 +1,13 @@
+# Runtime/server artifacts
+server/*.jar
+server/world*/
+server/logs/
+server/cache/
+server/plugins/*.jar
+backups/*.tar.gz
+
+# Python
+__pycache__/
+*.py[cod]
+
+server/install-manifest.json

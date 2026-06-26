@@ -1,0 +1,10 @@
+# Minimal safe global Paper tuning; keep gameplay vanilla.
+chunk-system:
+  gen-parallelism: default
+misc:
+  use-alternative-luck-formula: false
+unsupported-settings:
+  allow-headless-pistons: false
+  allow-permanent-block-break-exploits: false
+  allow-piston-duplication: false
+  allow-tripwire-disarming-exploits: false

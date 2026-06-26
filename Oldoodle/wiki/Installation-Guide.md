@@ -5,7 +5,7 @@
 Open:
 
 ```text
-https://[I have forgot my Github Username].github.io/oldoodle/
+https://Aki2457.github.io/oldoodle/
 ```
 
 ## Test Search Speed
@@ -13,7 +13,7 @@ https://[I have forgot my Github Username].github.io/oldoodle/
 Open:
 
 ```text
-https://[I have forgot my Github Username].github.io/oldoodle/speed-test/
+https://Aki2457.github.io/oldoodle/speed-test/
 ```
 
 The default endpoint is:

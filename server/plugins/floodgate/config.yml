@@ -1,0 +1,5 @@
+username-prefix: .
+replace-spaces: true
+send-floodgate-data: true
+disconnect:
+  invalid-key: Please connect through the configured Geyser listener.

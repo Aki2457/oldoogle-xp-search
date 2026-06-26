@@ -4,8 +4,8 @@ Oldoodle XP is a Windows XP / Internet Explorer styled search app with live resu
 
 ## Live Links
 
-- GitHub Pages home: <https://[I have forgot my Github Username].github.io/oldoodle/>
-- Speed test website: <https://[I have forgot my Github Username].github.io/oldoodle/speed-test/>
+- GitHub Pages home: <https://Aki2457.github.io/oldoodle/>
+- Speed test website: <https://Aki2457.github.io/oldoodle/speed-test/>
 - Public deploy/source repo: <https://github.com/Aki2457/oldoodle>
 - Main private/source repo: <https://github.com/Aki2457/oldoodle>
 - Latest release zip: <https://github.com/Aki2457/oldoodle/releases/download/v1.0.1/Oldoodle_Release.zip>
@@ -110,7 +110,7 @@ SEARCH_TIMEOUT_MS=5000
 CUSTOM_SEARCH_URL=https://example.com/search.json?q={q}
 APIFY_TOKEN=apify_api_demo_replace_me
 APIFY_ACTOR_ID=apify/google-search-scraper
-OLDOODLE_PUBLIC_SITE=https://[I have forgot my Github Username].github.io/oldoodle/
+OLDOODLE_PUBLIC_SITE=https://Aki2457.github.io/oldoodle/
 OLDOODLE_API_BASE=http://localhost:3000
 
 # Demo auto-reply/chat placeholders for future bot work.
@@ -166,7 +166,7 @@ Then mention the bot, DM it, or use `!oldoodle status`, `!oldoodle search`, or `
 Hosted tester:
 
 ```text
-https://[I have forgot my Github Username].github.io/oldoodle/speed-test/
+https://Aki2457.github.io/oldoodle/speed-test/
 ```
 
 Default endpoint:
@@ -345,13 +345,13 @@ https://github.com/Aki2457/oldoodle
 The root site serves the Oldoodle XP mini-app:
 
 ```text
-https://[I have forgot my Github Username].github.io/oldoodle/
+https://Aki2457.github.io/oldoodle/
 ```
 
 The speed tester is served at:
 
 ```text
-https://[I have forgot my Github Username].github.io/oldoodle/speed-test/
+https://Aki2457.github.io/oldoodle/speed-test/
 ```
 
 ## Useful Commands

@@ -15,7 +15,7 @@ https://streamlinehq.com
 Oldoodle includes a public attribution page:
 
 ```text
-https://[I have forgot my Github Username].github.io/oldoodle/made-possible.html
+https://Aki2457.github.io/oldoodle/made-possible.html
 ```
 
 ## Project Tools

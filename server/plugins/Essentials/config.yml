@@ -1,0 +1,7 @@
+# EssentialsX baseline. Grant permissions with LuckPerms.
+spawn-on-join: false
+sethome-multiple:
+  default: 3
+teleport-safety: true
+teleport-cooldown: 3
+teleport-delay: 3

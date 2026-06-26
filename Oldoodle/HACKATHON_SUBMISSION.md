@@ -13,8 +13,8 @@
 
 ## Demo Links
 
-- Public website: https://[I have forgot my Github Username].github.io/oldoodle/
-- Speed test: https://[I have forgot my Github Username].github.io/oldoodle/speed-test/
+- Public website: https://Aki2457.github.io/oldoodle/
+- Speed test: https://Aki2457.github.io/oldoodle/speed-test/
 - Search API: http://localhost:3000/api/health
 - Public source repo: https://github.com/Aki2457/oldoodle
 

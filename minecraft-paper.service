@@ -1,0 +1,21 @@
+[Unit]
+Description=Paper Minecraft Server with Geyser/Floodgate
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+WorkingDirectory=/opt/minecraft/server
+ExecStart=/opt/minecraft/scripts/start.sh
+User=minecraft
+Group=minecraft
+Restart=on-failure
+RestartSec=10
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectHome=true
+ReadWritePaths=/opt/minecraft
+LimitNOFILE=65535
+
+[Install]
+WantedBy=multi-user.target
